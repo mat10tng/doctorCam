@@ -1,4 +1,4 @@
-package GUIControl;
+package GUIView;
 
 public class View {
 
