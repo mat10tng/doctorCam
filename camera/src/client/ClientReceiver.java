@@ -1,6 +1,6 @@
 package client;
 
-public class ClientReceiver {
+public class ClientReceiver extends Thread {
 
 	public ClientReceiver() {
 		// TODO Auto-generated constructor stub
