@@ -2,15 +2,30 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class ServerReceiver extends Thread{
-	private ServerSocket ss;
+	private ServerSocket serverSocket;
 	public ServerReceiver(int port) throws IOException {
 		// TODO Auto-generated constructor stub
-		ss = new ServerSocket(port);		
+		serverSocket = new ServerSocket(port);		
 	}
-	public void StartServerReceiver(){
-		
+	public void run(){
+		while(!Thread.interrupted()){
+			try {
+				Socket clientSocket;
+				clientSocket = serverSocket.accept();
+				clientSocket.setTcpNoDelay(true);
+				
+				
+				serverSocket.close();
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 }
