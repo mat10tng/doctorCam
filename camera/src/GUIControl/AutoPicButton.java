@@ -2,9 +2,9 @@ package GUIControl;
 
 import javax.swing.JRadioButton;
 
-public class AutoButton extends JRadioButton {
+public class AutoPicButton extends JRadioButton {
 
-	public AutoButton() {
+	public AutoPicButton() {
 		super("Auto");
 	}
 
