@@ -10,7 +10,7 @@ public class ServerReceiver extends Thread{
 		ss = new ServerSocket(port);		
 	}
 	public void StartServerReceiver(){
-		pppppp
+		
 	}
 
 }
