@@ -6,5 +6,10 @@ public class ServerSender extends Thread{
 		
 	}
 
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

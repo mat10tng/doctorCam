@@ -18,7 +18,6 @@ public class ServerReceiver extends Thread{
 				clientSocket.setTcpNoDelay(true);
 				
 				
-				serverSocket.close();
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -26,6 +25,10 @@ public class ServerReceiver extends Thread{
 			}
 
 		}
+	}
+	public void close() throws IOException {
+		// TODO Auto-generated method stub
+		serverSocket.close();
 	}
 
 }
