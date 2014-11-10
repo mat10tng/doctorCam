@@ -19,7 +19,7 @@ public class ControlWindow extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		new ControlWindow();
+
 		try {
 			// Set cross-platform Java L&F (also called "Metal")
 			UIManager.setLookAndFeel(UIManager
@@ -36,5 +36,6 @@ public class ControlWindow extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		new ControlWindow();
 	}
 }
