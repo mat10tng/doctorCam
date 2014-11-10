@@ -1,12 +1,15 @@
 package GUIControl;
 
-import javax.swing.JLabel;
+import java.awt.GridLayout;
+
 import javax.swing.JPanel;
 
 public class CameraPanel extends JPanel {
 
 	public CameraPanel() {
-		this.add(new JLabel("hejsan"));
+		super(new GridLayout(1,2));
+		this.add(new CameraButton("cam 1"));
+		this.add(new CameraButton("cam 2"));
 	}
 
 }
