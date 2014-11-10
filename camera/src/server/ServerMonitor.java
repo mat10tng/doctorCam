@@ -9,8 +9,7 @@ public class ServerMonitor {
 	private byte[] lastPicture;
 	private boolean sendPicture;
 	boolean sendMotionDetected;
-	public ServerMonitor(ServerSender ss, ServerReceiver sr) {
+	public ServerMonitor() {
 		// TODO Auto-generated constructor stub
 	}
-
 }
