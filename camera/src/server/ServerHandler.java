@@ -22,12 +22,10 @@ public class ServerHandler extends Thread{
 				InputStream inStream = s.getInputStream();
 				OutputStream outStream = s.getOutputStream();
 				
-				
 				ServerSender ss = new ServerSender(outStream,serverMonitor);
 				ServerReceiver sr = new ServerReceiver(inStream,serverMonitor);
 				
 				wait();
-				
 				ss.interrupt();
 				sr.interrupt();
 				s.close();

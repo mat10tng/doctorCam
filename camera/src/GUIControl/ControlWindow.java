@@ -15,27 +15,27 @@ public class ControlWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		pack();
-		setResizable(false);
+	//	setResizable(false);
 	}
 
 	public static void main(String args[]) {
 
-//		try {
-//			// Set cross-platform Java L&F (also called "Metal")
-//			UIManager.setLookAndFeel(UIManager
-//					.getSystemLookAndFeelClassName());
-//		} catch (UnsupportedLookAndFeelException e) {
-//			// handle exception
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (InstantiationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			// Set cross-platform Java L&F (also called "Metal")
+			UIManager.setLookAndFeel(UIManager
+					.getSystemLookAndFeelClassName());
+		} catch (UnsupportedLookAndFeelException e) {
+			// handle exception
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		new ControlWindow();
 	}
 }
