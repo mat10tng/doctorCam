@@ -14,8 +14,8 @@ public class ControlWindow extends JFrame {
 		this.add(new ControlPanel());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		pack();
-	//	setResizable(false);
+		setSize(300,350);
+		setResizable(false);
 	}
 
 	public static void main(String args[]) {
