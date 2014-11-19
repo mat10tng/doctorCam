@@ -8,15 +8,13 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import GUIControl.ControlWindow;
-
 public class ViewWindow extends JFrame {
 	private ImagePanel imagePanel;
 	private ImageIcon videoFeed;
 	private JLabel settings;
 
-	public ViewWindow() {
-		super();
+	public ViewWindow(String id) {
+		super(id);
 		ImageIcon img = new ImageIcon("screen.png");
 		videoFeed = img;
 		settings = new JLabel("placeholder settings");
@@ -28,6 +26,7 @@ public class ViewWindow extends JFrame {
 		this.setSize(300, 300);
 		this.setVisible(true);
 		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public void updateView() {
@@ -52,7 +51,7 @@ public class ViewWindow extends JFrame {
 			e.printStackTrace();
 		}
 
-		new ViewWindow();
+		new ViewWindow("Camera 1");
 	}
 
 }
