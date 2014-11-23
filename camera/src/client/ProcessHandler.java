@@ -1,8 +1,8 @@
 package client;
 
-public class ClientHandler {
+public class ProcessHandler {
 
-	public ClientHandler() {
+	public ProcessHandler() {
 		// TODO Auto-generated constructor stub
 	}
 
