@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**Waits for a client to connect. When connected, generates a 
+ConnectionProcess and waits for it to close (iterative process).  */
 public class ServerHandler extends Thread{
 	private ServerSocket serverSocket;
 	public ServerHandler(int port) throws IOException {
