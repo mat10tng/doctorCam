@@ -19,13 +19,11 @@ public class ClientMonitor {
 	}
 	
 	
-	public synchronized ConnectionData getConnectionData(){
-		ConnectionData data=null;
+	public synchronized ConnectionData getConnectionData() throws InterruptedException{
 		while(queue.isEmpty()){
-			data=queue.remove(0);
-			break;
+			wait();
 		}
-		return data;
+		return queue.remove(0);
 		
 	}
 
