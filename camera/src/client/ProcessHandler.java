@@ -1,7 +1,6 @@
 package client;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -15,6 +14,11 @@ public class ProcessHandler extends Thread {
 		clientSockets = new Socket[2];
 	}
 
+	/*
+	 * Sets up and destroys connection, creates new connections threads and destroys them when terminated
+	 * Blocked by monitor operation to know when to set up och kill connections.
+	 * @see java.lang.Thread#run()
+	 */
 	public void run() {
 		while (!isInterrupted()) {
 			try {
@@ -29,9 +33,9 @@ public class ProcessHandler extends Thread {
 					clientSockets[id] = new Socket(cdata.getIP(),
 							cdata.getPort());
 					new ClientReceiver(monitor,
-							clientSockets[id].getInputStream());
+							clientSockets[id].getInputStream(),id);
 					new ClientSender(monitor,
-							clientSockets[id].getOutputStream());
+							clientSockets[id].getOutputStream(),id);
 				} catch (UnknownHostException e) {
 					System.out.println("Failed to connect to Host");
 					e.printStackTrace();
