@@ -15,9 +15,13 @@ public class ProcessHandler extends Thread {
 		clientSockets = new Socket[2];
 	}
 
-	public void run(){
-		while (!Thread.interrupted()) {
-			//cdata = monitor.getConnectionData();
+	public void run() {
+		while (!isInterrupted()) {
+			try {
+				cdata = monitor.getConnectionData();
+			} catch (InterruptedException e1) {
+				Thread.currentThread().interrupt();
+			}
 			int id = cdata.getID();
 			switch (cdata.getAction()) {
 			case (ConnectionData.OPEN_CONNECTION):
