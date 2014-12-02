@@ -1,0 +1,4 @@
+TODO Client Edition:
+
+* Constants for serverPackage(constantClass?)
+* Add attributes to Picture (Latency, FPS, Mode, sleepTime ...)
