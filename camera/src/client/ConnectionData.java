@@ -16,16 +16,16 @@ public class ConnectionData {
 		this.ID=ID;
 		this.action=action;
 	}
-	String getIP(){
+	public String getIP(){
 		return IP;
 	}
-	int getPort(){
+	public  int getPort(){
 		return port;
 	}
-	int getID(){
+	public int getID(){
 		return ID;
 	}
-	int getAction(){
+	public  int getAction(){
 		return action;
 	}
 }
