@@ -1,0 +1,15 @@
+package client;
+
+public class Constants {
+	public class CameraMode{
+		public static final int IDLE_MODE=0;
+		public static final int MOVIE_MODE=1;
+		public static final int AUTO_MODE=2;
+	}
+	public class ViewMode{
+		public static final int SYNC_MODE=0;
+		public static final int AUTO_MODE=1;
+		public static final int AUTOSYNC_MODE=2;
+	}
+	
+}
