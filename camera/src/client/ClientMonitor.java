@@ -2,13 +2,18 @@ package client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ClientMonitor {
 	private ArrayList<ConnectionData> queue;
 	private HashMap<Integer,ArrayList<ClientSendData>> sendData;
+	private List<byte[]> pictures;
+	private boolean motionDetected;
 	public ClientMonitor() {
+		motionDetected=false;
 		queue = new ArrayList<ConnectionData>();
 		sendData=new HashMap<Integer,ArrayList<ClientSendData>>();
+		pictures= new ArrayList<byte[]>();
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -20,16 +25,21 @@ public class ClientMonitor {
 	public synchronized void addConnectionData(ConnectionData data){
 		queue.add(data);
 	}
-	
+	public synchronized void addPicture(byte[] picture){
+		pictures.add(picture);
+	}
 	
 	public synchronized ConnectionData getConnectionData() throws InterruptedException{
 		while(queue.isEmpty()){
 			wait();
 		}
 		return queue.remove(0);
-		
 	}
-
+	
+	private synchronized void motionDetected(){
+		motionDetected=true;
+	}
+	
 	/*
 	 * Called by ClientSender thread to get next package to send.
 	 * Blocking until ready to send package
