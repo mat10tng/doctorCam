@@ -16,7 +16,6 @@ public class Picture {
 				picture[i - 8] = data[i].byteValue();
 			}
 		}
-
 	}
 	
 	public byte[] getPicture(){
