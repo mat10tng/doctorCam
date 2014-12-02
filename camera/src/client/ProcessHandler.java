@@ -9,6 +9,9 @@ public class ProcessHandler extends Thread {
 	private ConnectionData cdata;
 	private Socket clientSockets[];
 
+	/*
+	 * Creates a ProcessHandler thread which
+	 */
 	public ProcessHandler(ClientMonitor monitor) {
 		this.monitor = monitor;
 		clientSockets = new Socket[2];
