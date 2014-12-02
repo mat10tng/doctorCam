@@ -8,6 +8,8 @@ public class ClientMonitor {
 	private ArrayList<ConnectionData> queue;
 	private HashMap<Integer,ArrayList<ClientSendData>> sendData;
 	private List<Picture> pictures;
+	private int viewMode;
+	private int cameraMode;
 	private boolean motionDetected;
 	
 	
@@ -19,7 +21,8 @@ public class ClientMonitor {
 		queue = new ArrayList<ConnectionData>();
 		sendData=new HashMap<Integer,ArrayList<ClientSendData>>();
 		pictures= new ArrayList<Picture>();
-
+		viewMode=Constants.ViewMode.AUTO_MODE;
+		cameraMode=Constants.CameraMode.AUTO_MODE;
 	}
 	
 	
@@ -63,11 +66,24 @@ public class ClientMonitor {
 	 * 
 	 * @return ClientSendData - Data to be sent to server
 	 */
-	public ClientSendData writeToOutput(int id) throws InterruptedException {
+	public synchronized ClientSendData writeToOutput(int id) throws InterruptedException {
 		while(sendData.get(id).isEmpty()){
 			wait();
 		}
 		return sendData.get(id).remove(0);
 	}
-
+	/**
+	 * Sets the current Camera Mode
+	 * @param mode: a constant listed in Constants.CameraMode
+	 */
+	public synchronized void setCameraMode(int mode){
+		cameraMode=mode;
+	}
+	/**
+	 * Sets the current View Mode
+	 * @param mode: a constant listed in Constants.ViewMode
+	 */
+	public synchronized void setViewMode(int mode){
+		viewMode=mode;
+	}
 }
