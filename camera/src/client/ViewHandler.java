@@ -11,7 +11,7 @@ public class ViewHandler extends Thread{
 	
 	
 	public void run(){
-		
+		 
 	}
 
 }
