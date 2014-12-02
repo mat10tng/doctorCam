@@ -16,4 +16,10 @@ public class ClientSendData {
 	public int getStatus(){
 		return status;
 	}
+	public boolean isCloseConnection(){
+		return status==INTERRUPT;
+	}
+	public boolean isSendData(){
+		return status==SENDDATA;
+	}
 }

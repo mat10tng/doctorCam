@@ -32,10 +32,13 @@ public class ClientSender extends Thread {
 	public void run() {
 		try {
 			while (!isInterrupted()) {
-				byte[] httpPackage = new byte[10];
-				httpPackage = monitor.writeToOutput(id);
-				Thread.currentThread().interrupt();
-				output.write(httpPackage);
+				ClientSendData packagedData;
+				packagedData = monitor.writeToOutput(id);
+				if (packagedData.isCloseConnection()){
+					throw new InterruptedException();
+				}else{
+					output.write(packagedData.getHttpData());
+				}
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

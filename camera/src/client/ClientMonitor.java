@@ -1,11 +1,14 @@
 package client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ClientMonitor {
 	private ArrayList<ConnectionData> queue;
+	private HashMap<Integer,ArrayList<ClientSendData>> sendData;
 	public ClientMonitor() {
 		queue = new ArrayList<ConnectionData>();
+		sendData=new HashMap<Integer,ArrayList<ClientSendData>>();
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -31,9 +34,11 @@ public class ClientMonitor {
 	 * Called by ClientSender thread to get next package to send.
 	 * Blocking until ready to send package
 	 */
-	public byte[] writeToOutput(int id) throws InterruptedException {
-		// TODO Wait conditions for clientSend and sending package
-		return null;
+	public ClientSendData writeToOutput(int id) throws InterruptedException {
+		while(sendData.get(id).isEmpty()){
+			wait();
+		}
+		return sendData.get(id).remove(0);
 	}
 
 }
