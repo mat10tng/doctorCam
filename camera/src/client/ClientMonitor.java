@@ -27,4 +27,13 @@ public class ClientMonitor {
 		
 	}
 
+	/*
+	 * Called by ClientSender thread to get next package to send.
+	 * Blocking until ready to send package
+	 */
+	public byte[] writeToOutput(int id) throws InterruptedException {
+		// TODO Wait conditions for clientSend and sending package
+		return null;
+	}
+
 }
