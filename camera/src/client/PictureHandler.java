@@ -1,8 +1,8 @@
 package client;
 
-public class ViewHandler extends Thread{
+public class PictureHandler extends Thread{
 	
-	public ViewHandler() {
+	public PictureHandler() {
 		// TODO Auto-generated constructor stub
 		
 	}

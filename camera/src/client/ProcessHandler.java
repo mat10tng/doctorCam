@@ -10,7 +10,7 @@ public class ProcessHandler extends Thread {
 	private Socket clientSockets[];
 
 	/*
-	 * Creates a ProcessHandler thread which
+	 * Creates a ProcessHandler thread which handles connections processes
 	 */
 	public ProcessHandler(ClientMonitor monitor) {
 		this.monitor = monitor;

@@ -26,7 +26,7 @@ public class ViewWindow extends JFrame {
 		this.setSize(300, 300);
 		this.setVisible(true);
 		this.setResizable(false);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	public void updateView() {
@@ -52,6 +52,11 @@ public class ViewWindow extends JFrame {
 		}
 
 		new ViewWindow("Camera 1");
+	}
+
+	public void close() {
+		this.dispose();
+		
 	}
 
 }
