@@ -10,7 +10,7 @@ import GUIView.ViewWindow;
 
 /**
  * @author Shan
- *
+ * 
  */
 public class ProcessHandler extends Thread {
 
@@ -18,6 +18,7 @@ public class ProcessHandler extends Thread {
 	private PictureMonitor picMonitor;
 	private HashMap<Integer, Socket> clientSockets;
 	private HashMap<Integer, ViewHandler> views;
+	private HashMap<Integer, ClientSender> senders;
 	private ConnectionData cdata;
 
 	/**
@@ -34,6 +35,7 @@ public class ProcessHandler extends Thread {
 		this.picMonitor = picMonitor;
 		clientSockets = new HashMap<Integer, Socket>();
 		views = new HashMap<Integer, ViewHandler>();
+		senders = new HashMap<Integer, ClientSender>();
 	}
 
 	/*
@@ -54,15 +56,23 @@ public class ProcessHandler extends Thread {
 							"Camera: " + id), id));
 					clientSockets.put(id,
 							new Socket(cdata.getIP(), cdata.getPort()));
-					new ClientReceiver(clientMonitor, clientSockets.get(id)
-							.getInputStream(), id);
-					new ClientSender(clientMonitor, clientSockets.get(id)
-							.getOutputStream(), id);
+					ClientReceiver receiver = new ClientReceiver(clientMonitor,
+							clientSockets.get(id).getInputStream(), id);
+					senders.put(id, new ClientSender(clientMonitor,
+							clientSockets.get(id).getOutputStream(), id));
+					picMonitor.registerPictureSource(id);
+					views.get(id).start();
+					senders.get(id).start();
+					receiver.start();
 					break;
 				case (Constants.ConnectionActions.CLOSE_CONNECTION):
 					clientSockets.get(id).close();
+					senders.get(id).interrupt();
 					views.get(id).interrupt();
 					clientMonitor.removeConnection(id);
+					picMonitor.removePictureSource(id);
+					senders.remove(id);
+					views.remove(id);
 					break;
 				default:
 					System.out.println("You should not be here!");
@@ -72,7 +82,8 @@ public class ProcessHandler extends Thread {
 
 			}
 		} catch (InterruptedException e1) {
-			System.out.println("interrupted thread, errorMessege"+e1.getMessage());
+			System.out.println("interrupted thread, errorMessege"
+					+ e1.getMessage());
 			Thread.currentThread().interrupt();
 		} catch (UnknownHostException e) {
 			System.out.println("Failed to connect to Host");

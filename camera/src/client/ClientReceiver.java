@@ -51,7 +51,8 @@ public class ClientReceiver extends Thread {
 				}
 				// proccess package to information.
 				// TODO CONSTANTS ADDED FROM SERVERSIDE
-				switch (dataPackage.get(0)) {
+				byte packageType = dataPackage.get(0);
+				switch (packageType) {
 				case (0 /* Picture Package */):
 					dataPackage.remove(0);
 					monitor.addPicture(new Picture((Byte[]) dataPackage

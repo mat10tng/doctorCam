@@ -22,7 +22,8 @@ public class ClientSender extends Thread {
 	 * @param id
 	 *            : Which network this thread belongs to (ergo camera)
 	 */
-	public ClientSender(ClientMonitor clientMonitor, OutputStream outputStream, int id) {
+	public ClientSender(ClientMonitor clientMonitor, OutputStream outputStream,
+			int id) {
 		this.clientMonitor = clientMonitor;
 		this.output = outputStream;
 		this.id = id;
@@ -39,11 +40,9 @@ public class ClientSender extends Thread {
 			while (!isInterrupted()) {
 				ClientSendData packagedData;
 				packagedData = clientMonitor.getOutgoingData(id);
-				if (packagedData.isCloseConnection()) {
-					throw new InterruptedException();
-				} else {
-					output.write(packagedData.getHttpData());
-				}
+
+				output.write(packagedData.getHttpData());
+
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
