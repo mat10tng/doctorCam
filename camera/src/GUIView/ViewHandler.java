@@ -7,7 +7,7 @@ import client.PictureMonitor;
  * 
  */
 public class ViewHandler extends Thread {
-	private PictureMonitor monitor;
+	private PictureMonitor pictureMonitor;
 	private ViewWindow window;
 	private int id;
 
@@ -21,8 +21,8 @@ public class ViewHandler extends Thread {
 	 * @param id
 	 *            : The unique id
 	 */
-	public ViewHandler(PictureMonitor monitor, ViewWindow window, int id) {
-		this.monitor = monitor;
+	public ViewHandler(PictureMonitor pictureMonitor, ViewWindow window, int id) {
+		this.pictureMonitor = pictureMonitor;
 		this.window = window;
 		this.id = id;
 	}
@@ -35,7 +35,7 @@ public class ViewHandler extends Thread {
 	public void run() {
 		try {
 			while (!isInterrupted()) {
-				monitor.getPicture(id);
+				pictureMonitor.getPicture(id);
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
