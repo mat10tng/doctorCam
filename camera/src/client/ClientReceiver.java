@@ -45,6 +45,7 @@ public class ClientReceiver extends Thread {
 				// wait for package to be read
 				int tempData = input.read();
 				while (tempData > -1) {
+					//cast from int to byte
 					dataPackage.add((byte) (tempData - 128));
 					tempData = input.read();
 				}
