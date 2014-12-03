@@ -11,5 +11,8 @@ public class Constants {
 		public static final int AUTO_MODE=1;
 		public static final int AUTOSYNC_MODE=2;
 	}
-	
+	public class ConnectionActions{
+		public static final int CLOSE_CONNECTION=0;
+		public static final int OPEN_CONNECTION=1;
+	}
 }
