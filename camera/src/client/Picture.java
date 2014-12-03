@@ -1,11 +1,14 @@
 package client;
 
+import javax.swing.ImageIcon;
+
 /**
  * @author Shan
  *
  */
 public class Picture {
 	private byte[] picture;
+	private long waitTime;
 	private byte[] timestamp;
 	private int id;
 
@@ -17,6 +20,7 @@ public class Picture {
 	 */
 	public Picture(Byte[] data, int id) {
 		this.id  = id;
+		waitTime = 0;
 		timestamp = new byte[8];
 		picture = new byte[data.length - 9];
 		for (int i = 0; i < data.length; i++) {
@@ -32,8 +36,8 @@ public class Picture {
 	 * Returns the picture in byte format
 	 * @return: picture in the form of bytes
 	 */
-	public byte[] getPicture(){
-		return picture;
+	public ImageIcon getPicture(){
+		return null;
 		
 	}
 	/**
@@ -45,9 +49,12 @@ public class Picture {
 	}
 	
 	public long getWaitTime(){
-		return 0;
+		return waitTime;
 	}
 	
+	public void setWaitTime(long waitTime){
+		this.waitTime = waitTime;
+	}
 	/**
 	 * The id the data/ picture came from.
 	 * @return: id of what network as an int 
