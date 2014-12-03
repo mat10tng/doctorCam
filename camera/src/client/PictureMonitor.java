@@ -11,11 +11,13 @@ public class PictureMonitor {
 	private HashMap<Integer, LinkedList<Picture>> pictures;
 	private boolean forcedMode;
 	private int mode;
+	private long latestTime;
 
 	public PictureMonitor() {
 		pictures = new HashMap<Integer, LinkedList<Picture>>();
 		forcedMode = false;
 		mode = Constants.ViewMode.SYNC_MODE;
+		latestTime = 0;
 	}
 
 	/**
@@ -90,6 +92,10 @@ public class PictureMonitor {
 	 */
 	public synchronized void addPicture(Picture picture) {
 		if (pictures.containsKey(picture.getId())) {
+			if(latestTime != 0){
+				picture.setWaitTime(picture.getTimeStamp()-latestTime);
+			}
+			latestTime = picture.getTimeStamp();
 			pictures.get(picture.getId()).add(picture);
 		}
 	}
