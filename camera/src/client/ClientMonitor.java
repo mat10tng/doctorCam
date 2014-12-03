@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class ClientMonitor {
 	private LinkedList<ConnectionData> queue;
-	private HashMap<Integer,LinkedList<ClientSendData>> sendData;
+	private HashMap<Integer,LinkedList<Byte[]>> sendData;
 	private LinkedList<Picture> pictures;
 	private int cameraMode;
 	private boolean forcedMode;
@@ -17,7 +17,7 @@ public class ClientMonitor {
 	public ClientMonitor() {
 		forcedMode=false;
 		queue = new LinkedList<ConnectionData>();
-		sendData=new HashMap<Integer,LinkedList<ClientSendData>>();
+		sendData=new HashMap<Integer,LinkedList<Byte[]>>();
 		pictures= new LinkedList<Picture>();
 		cameraMode=Constants.CameraMode.IDLE_MODE;
 	}
@@ -29,7 +29,7 @@ public class ClientMonitor {
 	 * */
 	public synchronized void addConnectionData(ConnectionData data){
 		if(data.getAction()==Constants.ConnectionActions.OPEN_CONNECTION){
-			sendData.put(data.getID(), new LinkedList<ClientSendData>());
+			sendData.put(data.getID(), new LinkedList<Byte[]>());
 		}
 		queue.add(data);
 		notifyAll();
@@ -66,7 +66,7 @@ public class ClientMonitor {
 		}
 	}
 	private void addSendData(int mode){
-		byte[] modeData=new byte[2];
+		Byte[] modeData=new Byte[2];
 		switch(mode){
 		case(Constants.CameraMode.IDLE_MODE):
 			modeData=Constants.CameraMode.getIdleBytes();
@@ -78,9 +78,8 @@ public class ClientMonitor {
 			System.out.println("wrong in assSendData: "+this.toString());
 			System.exit(1);
 		}
-		ClientSendData changeModeData=new ClientSendData(Constants.ClientSendTypes.SENDDATA,modeData);
-		for (LinkedList<ClientSendData> queue:sendData.values()){
-			queue.add(changeModeData);
+		for (LinkedList<Byte[]> queue:sendData.values()){
+			queue.add(modeData);
 		}	
 	}
 	/**
@@ -89,7 +88,7 @@ public class ClientMonitor {
 	 * 
 	 * @return ClientSendData - Data to be sent to server
 	 */
-	public synchronized ClientSendData getOutgoingData(int id) throws InterruptedException {
+	public synchronized Byte[] getOutgoingData(int id) throws InterruptedException {
 		while(sendData.get(id).isEmpty()){
 			wait();
 		}

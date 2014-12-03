@@ -38,11 +38,13 @@ public class ClientSender extends Thread {
 	public void run() {
 		try {
 			while (!isInterrupted()) {
-				ClientSendData packagedData;
-				packagedData = clientMonitor.getOutgoingData(id);
-
-				output.write(packagedData.getHttpData());
-
+				Byte[] packagedData = clientMonitor.getOutgoingData(id);
+				//in order to write the data it needs to be in prmitive byte form, not Byte objects
+				byte[] primitiveBytePackage=new byte[packagedData.length];
+				for(int i=0;i<packagedData.length;i++){
+					primitiveBytePackage[i]=packagedData[i].byteValue();
+				}
+				output.write(primitiveBytePackage);
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
