@@ -2,45 +2,45 @@ package client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 
 public class ClientMonitor {
 	private ArrayList<ConnectionData> queue;
 	private HashMap<Integer,ArrayList<ClientSendData>> sendData;
-	private List<Picture> pictures;
+	private LinkedList<Picture> pictures;
 	private int viewMode;
 	private int cameraMode;
 	private boolean motionDetected;
 	
 	
-	/*
+	/**
 	 * Creates a ClientMonitor which handles the main traffic between network and GUI.
 	 */
 	public ClientMonitor() {
 		motionDetected=false;
 		queue = new ArrayList<ConnectionData>();
 		sendData=new HashMap<Integer,ArrayList<ClientSendData>>();
-		pictures= new ArrayList<Picture>();
+		pictures= new LinkedList<Picture>();
 		viewMode=Constants.ViewMode.AUTO_MODE;
 		cameraMode=Constants.CameraMode.AUTO_MODE;
 	}
 	
 	
-	/*
+	/**
 	 * Called by CrtlListener when a new camera is to be connected 
 	 * or a connection is to be closed
 	 * */
 	public synchronized void addConnectionData(ConnectionData data){
 		queue.add(data);
 	}
-	/*
+	/**
 	 * Called by ClientReceiver when a new picture package has arrived
 	 * Adds the new picture to a queue of pictures
 	 */
 	public synchronized void addPicture(Picture picture){
 		pictures.add(picture);
 	}
-	/*
+	/**
 	 * Called by ProcessHandler to get new connection information.
 	 * 
 	 * @return ConnectionData - Data to establish or destroy connection.
@@ -51,7 +51,7 @@ public class ClientMonitor {
 		}
 		return queue.remove(0);
 	}
-	/*
+	/**
 	 * Called by ClientReceiver when new motion detected package has arrived.
 	 * Tells the system that motion has been detected.
 	 * TODO Switch to movie mode/ handle forced modes.
@@ -60,7 +60,7 @@ public class ClientMonitor {
 		motionDetected=true;
 	}
 	
-	/*
+	/**
 	 * Called by ClientSender thread to get next package to send.
 	 * Blocking until ready to send package
 	 * 
@@ -85,5 +85,20 @@ public class ClientMonitor {
 	 */
 	public synchronized void setViewMode(int mode){
 		viewMode=mode;
+	}
+	public synchronized void addNewConnection(int ID){
+		sendData.put(ID, new ArrayList<ClientSendData>());
+	}
+	public synchronized void removeConnection(int ID){
+		sendData.remove(ID);
+	}
+	public synchronized Picture getPicture() throws InterruptedException{
+		while(pictures.isEmpty()){
+			wait();
+		}
+		return pictures.pop();
+	}
+	public synchronized boolean connectionExists(int ID){
+		return sendData.keySet().contains(ID);
 	}
 }
