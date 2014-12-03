@@ -55,10 +55,10 @@ public class Constants {
 	}
 
 	public class DebugIps {
-		public static final String IP1 = "testip1";
+		public static final String IP1 = "localhost";
 		public static final int PORT1 = 2001;
 		public static final int ID1 = 1;
-		public static final String IP2 = "testip2";
+		public static final String IP2 = "localhost";
 		public static final int PORT2 = 2002;
 		public static final int ID2 = 2;
 	}
