@@ -9,7 +9,7 @@ public class Constants {
 	public class ViewMode{
 		public static final int SYNC_MODE=0;
 		public static final int AUTO_MODE=1;
-		public static final int AUTOSYNC_MODE=2;
+		public static final int ASYNC_MODE=2;
 	}
 	public class ConnectionActions{
 		public static final int CLOSE_CONNECTION=0;

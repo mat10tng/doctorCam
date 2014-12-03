@@ -1,11 +1,25 @@
 package GUIControl;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JRadioButton;
 
-public class IdleButton extends JRadioButton {
+import client.ClientMonitor;
+import client.Constants;
 
-	public IdleButton() {
+public class IdleButton extends JRadioButton implements ActionListener{
+	private ClientMonitor monitor;
+	
+	public IdleButton(ClientMonitor monitor) {
 		super("Idle");
+		this.monitor = monitor;
+		addActionListener(this);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		monitor.setCameraMode(Constants.CameraMode.IDLE_MODE);
 	}
 
 }

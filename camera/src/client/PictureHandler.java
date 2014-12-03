@@ -6,7 +6,7 @@ import java.util.LinkedList;
 public class PictureHandler extends Thread{
 	private PictureMonitor pictureMonitor;
 	private HashMap<Integer,LinkedList<Picture>> pictures;
-	public PictureHandler(PictureMonitor pictureMonitor) {
+	public PictureHandler(ClientMonitor clientMonitor,PictureMonitor pictureMonitor) {
 		this.pictureMonitor=pictureMonitor;
 		pictures=new HashMap<Integer,LinkedList<Picture>>();
 		

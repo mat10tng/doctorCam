@@ -7,13 +7,21 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
+import client.ClientMonitor;
+import client.ConnectionData;
+import client.Constants;
+
 public class CameraButton extends JButton implements ActionListener {
+	private ClientMonitor monitor;
+	private String ip;
+	private int port;
+	private int id;
 	private ImageIcon cam;
 	private ImageIcon killcam;
 	private Boolean pressed;
 	private String name;
 
-	public CameraButton(String name) {
+	public CameraButton(String name, String ip, int port, int id, ClientMonitor monitor) {
 		super(name);
 		setVerticalTextPosition(SwingConstants.BOTTOM);
 		setHorizontalTextPosition(SwingConstants.CENTER);
@@ -25,17 +33,24 @@ public class CameraButton extends JButton implements ActionListener {
 		setIcon(cam);
 	}
 
+	/* 
+	 * TODO fix proper connection data
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (pressed) {
 			setText(name);
 			setIcon(cam);
 			pressed = false;
+			
+			monitor.addConnectionData(new ConnectionData(ip,port,id,Constants.ConnectionActions.CLOSE_CONNECTION));
 		} else {
 
 			setText("kill " + name);
 			setIcon(killcam);
 			pressed = true;
+			monitor.addConnectionData(new ConnectionData(ip,port,id,Constants.ConnectionActions.OPEN_CONNECTION));
 		}
 	}
 

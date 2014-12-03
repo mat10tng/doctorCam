@@ -1,3 +1,4 @@
 TODO Client Edition:
 
 * Add attributes to Picture (Latency, FPS, Mode, sleepTime ...)
+* viewHandler thread class functionallity (wait right time etc)
