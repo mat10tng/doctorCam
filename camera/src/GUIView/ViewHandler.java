@@ -37,7 +37,9 @@ public class ViewHandler extends Thread {
 		try {
 			while (!isInterrupted()) {
 				Picture p=pictureMonitor.getPicture(id);
-				Thread.sleep(p.getWaitTime());
+				if (p.getWaitTime()>0){
+					Thread.sleep(p.getWaitTime());
+				}
 				window.updateView(p);
 			}
 		} catch (InterruptedException e) {

@@ -9,9 +9,10 @@ import javax.swing.ImageIcon;
 public class Picture {
 	private ImageIcon picture;
 	private long waitTime;
-	private long timestamp;
+	private long timeStamp;
 	private int id;
-
+	public int currentViewMode;
+	public int currentCameraMode;
 	/**
 	 * Converts a data package to a picture object.
 	 * Represents a picture and all data belonging to that picture
@@ -30,7 +31,7 @@ public class Picture {
 				bytePicture[i - 8] = data[i].byteValue();
 			}
 		}
-		timestamp=byteTimeToLongTime(byteTimestamp);
+		timeStamp=byteTimeToLongTime(byteTimestamp);
 		picture=new ImageIcon(bytePicture);
 	}
 	private long byteTimeToLongTime(byte[] byteTime){
@@ -54,7 +55,7 @@ public class Picture {
 	 * @return: Timestamp in the form of bytes
 	 */
 	public long getTimeStamp(){
-		return timestamp;
+		return timeStamp;
 	}
 	
 	public long getWaitTime(){
@@ -62,7 +63,7 @@ public class Picture {
 	}
 	
 	public void setWaitTime(long latestTime){
-		this.waitTime = timestamp-latestTime;
+		this.waitTime = timeStamp-latestTime;
 	}
 	/**
 	 * The id the data/ picture came from.
@@ -71,5 +72,13 @@ public class Picture {
 	public int getId(){
 		return id;
 	}
-
+	public long getLatencyInMS(){
+		return System.currentTimeMillis()-timeStamp;
+	}
+	public String getModeString(){
+		String settingsString="";
+		settingsString+=" ViewMode="+Constants.ViewMode.toString(currentViewMode);
+		settingsString+=" CameraMode="+Constants.CameraMode.toString(currentCameraMode);
+		return settingsString;
+	}
 }

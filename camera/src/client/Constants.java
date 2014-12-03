@@ -1,16 +1,41 @@
 package client;
 
 public class Constants {
-	public class CameraMode {
+	public static class CameraMode {
 		public static final int IDLE_MODE = 0;
 		public static final int MOVIE_MODE = 1;
 		public static final int AUTO_MODE = 2;
-	}
+		public static String toString(int mode){
+			switch(mode){
+			case(IDLE_MODE):
+				return "idle mode";
+			case(MOVIE_MODE):
+				return "movie mode";
+			case(AUTO_MODE):
+				return "auto mode";
+			default:
+				return "undefined camera mode";
+			}
+			}
+		}
 
-	public class ViewMode {
+	public static class ViewMode {
 		public static final int SYNC_MODE = 0;
 		public static final int AUTO_MODE = 1;
 		public static final int ASYNC_MODE = 2;
+		
+		public static String toString(int mode){
+			switch(mode){
+			case(SYNC_MODE):
+				return "sync mode";
+			case(AUTO_MODE):
+				return "auto mode";
+			case(ASYNC_MODE):
+				return "async mode";
+			default:
+				return "undefined view mode";
+			}
+		}
 	}
 
 	public class ConnectionActions {

@@ -14,7 +14,7 @@ public class ViewWindow extends JFrame {
 	private ImagePanel imagePanel;
 	private ImageIcon videoFeed;
 	private JLabel settings;
-
+	private long lastPictureUpdated;
 	public ViewWindow(String id) {
 		super(id);
 		ImageIcon img = new ImageIcon("screen.png");
@@ -29,9 +29,24 @@ public class ViewWindow extends JFrame {
 		this.setVisible(true);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		lastPictureUpdated=0;
 	}
 
 	public void updateView(Picture picture) {
+		
+		String fpsString="0";
+		if(lastPictureUpdated!=0){
+			long now=System.currentTimeMillis();
+			long timeDifference=now-lastPictureUpdated;
+			double fps=1000.0/timeDifference;
+			fpsString=String.format("%.2f", fps);
+		}
+		lastPictureUpdated=System.currentTimeMillis();
+		String settingsString="Settings: ";
+		settingsString+=picture.getModeString();
+		settingsString+=" fps="+fpsString;
+		settingsString+=" latency="+picture.getLatencyInMS();
+		settings.setText(settingsString);
 		imagePanel.setPicture(picture.getPicture());
 		// Update picture and settings
 	}

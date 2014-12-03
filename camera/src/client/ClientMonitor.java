@@ -37,6 +37,7 @@ public class ClientMonitor {
 	 * Adds the new picture to a queue of pictures
 	 */
 	public synchronized void addPicture(Picture picture){
+		picture.currentCameraMode=cameraMode;
 		pictures.add(picture);
 		notifyAll();
 	}

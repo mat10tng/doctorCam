@@ -10,13 +10,13 @@ import java.util.LinkedList;
 public class PictureMonitor {
 	private HashMap<Integer, LinkedList<Picture>> pictures;
 	private boolean forcedMode;
-	private int mode;
+	private int viewMode;
 	private long latestTime;
 
 	public PictureMonitor() {
 		pictures = new HashMap<Integer, LinkedList<Picture>>();
 		forcedMode = false;
-		mode = Constants.ViewMode.SYNC_MODE;
+		viewMode = Constants.ViewMode.SYNC_MODE;
 		latestTime = 0;
 	}
 
@@ -29,7 +29,7 @@ public class PictureMonitor {
 	 */
 	public synchronized void setMode(int mode) {
 		if (!forcedMode) {
-			this.mode = mode;
+			this.viewMode = mode;
 		}
 	}
 
@@ -92,10 +92,11 @@ public class PictureMonitor {
 	 */
 	public synchronized void addPicture(Picture picture) {
 		if (pictures.containsKey(picture.getId())) {
-			if(latestTime != 0 && mode == Constants.ViewMode.SYNC_MODE){
+			if(latestTime != 0 && viewMode == Constants.ViewMode.SYNC_MODE){
 				picture.setWaitTime(latestTime);
 			}
 			latestTime = picture.getTimeStamp();
+			picture.currentViewMode=viewMode;
 			pictures.get(picture.getId()).add(picture);
 		}
 	}
