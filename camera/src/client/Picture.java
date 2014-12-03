@@ -40,8 +40,12 @@ public class Picture {
 	 * Returns a Timestamp from when the picture was taken
 	 * @return: Timestamp in the form of bytes
 	 */
-	public byte[] getTimeStamp(){
-		return timestamp;
+	public long getTimeStamp(){
+		return 0;
+	}
+	
+	public long getWaitTime(){
+		return 0;
 	}
 	
 	/**
