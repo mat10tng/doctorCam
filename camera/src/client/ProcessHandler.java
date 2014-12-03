@@ -50,7 +50,7 @@ public class ProcessHandler extends Thread {
 				Thread.currentThread().interrupt();
 				int id = cdata.getID();
 				switch (cdata.getAction()) {
-				case (ConnectionData.OPEN_CONNECTION):
+				case (Constants.ConnectionActions.OPEN_CONNECTION):
 					views.put(id, new ViewHandler(picMonitor, new ViewWindow(
 							"Camera: " + id), id));
 					clientSockets.put(id,
@@ -60,7 +60,7 @@ public class ProcessHandler extends Thread {
 					new ClientSender(MainMonitor, clientSockets.get(id)
 							.getOutputStream(), id);
 					break;
-				case (ConnectionData.CLOSE_CONNECTION):
+				case (Constants.ConnectionActions.CLOSE_CONNECTION):
 					views.get(id).interrupt();
 					clientSockets.get(id).close();
 					break;
