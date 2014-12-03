@@ -7,9 +7,9 @@ import javax.swing.ImageIcon;
  *
  */
 public class Picture {
-	private byte[] picture;
+	private ImageIcon picture;
 	private long waitTime;
-	private byte[] timestamp;
+	private long timestamp;
 	private int id;
 
 	/**
@@ -21,39 +21,48 @@ public class Picture {
 	public Picture(Byte[] data, int id) {
 		this.id  = id;
 		waitTime = 0;
-		timestamp = new byte[8];
-		picture = new byte[data.length - 9];
+		byte[] byteTimestamp = new byte[8];
+		byte[] bytePicture = new byte[data.length - 9];
 		for (int i = 0; i < data.length; i++) {
 			if (i < 8) {
-				timestamp[i] = data[i].byteValue();
+				byteTimestamp[i] = data[i].byteValue();
 			} else {
-				picture[i - 8] = data[i].byteValue();
+				bytePicture[i - 8] = data[i].byteValue();
 			}
 		}
+		timestamp=byteTimeToLongTime(byteTimestamp);
+		picture=new ImageIcon(bytePicture);
 	}
-	
+	private long byteTimeToLongTime(byte[] byteTime){
+		long time=0;
+		for(int i=0;i<8;i++){
+			time=time<<8;
+			long addTime=(long)byteTime[i];
+			time+=addTime;
+		}
+		return time;
+	}
 	/**
 	 * Returns the picture in byte format
 	 * @return: picture in the form of bytes
 	 */
 	public ImageIcon getPicture(){
-		return null;
-		
+		return picture;
 	}
 	/**
 	 * Returns a Timestamp from when the picture was taken
 	 * @return: Timestamp in the form of bytes
 	 */
 	public long getTimeStamp(){
-		return 0;
+		return timestamp;
 	}
 	
 	public long getWaitTime(){
 		return waitTime;
 	}
 	
-	public void setWaitTime(long waitTime){
-		this.waitTime = waitTime;
+	public void setWaitTime(long latestTime){
+		this.waitTime = timestamp-latestTime;
 	}
 	/**
 	 * The id the data/ picture came from.

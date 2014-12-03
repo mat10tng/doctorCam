@@ -93,7 +93,7 @@ public class PictureMonitor {
 	public synchronized void addPicture(Picture picture) {
 		if (pictures.containsKey(picture.getId())) {
 			if(latestTime != 0 && mode == Constants.ViewMode.SYNC_MODE){
-				picture.setWaitTime(picture.getTimeStamp()-latestTime);
+				picture.setWaitTime(latestTime);
 			}
 			latestTime = picture.getTimeStamp();
 			pictures.get(picture.getId()).add(picture);
