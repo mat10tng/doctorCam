@@ -23,13 +23,14 @@ public class ViewWindow extends JFrame {
 		setLayout(new BorderLayout());
 		this.add(settings, BorderLayout.SOUTH);
 		this.add(imagePanel, BorderLayout.NORTH);
-		this.setSize(300, 300);
+		this.setSize(700, 500);
 		this.setVisible(true);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
-	public void updateView() {
+	public void updateView(ImageIcon picture) {
+		imagePanel.setPicture(picture);
 		// Update picture and settings
 	}
 

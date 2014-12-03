@@ -1,5 +1,6 @@
 package GUIView;
 
+import client.Picture;
 import client.PictureMonitor;
 
 /**
@@ -35,7 +36,9 @@ public class ViewHandler extends Thread {
 	public void run() {
 		try {
 			while (!isInterrupted()) {
-				pictureMonitor.getPicture(id);
+				Picture p=pictureMonitor.getPicture(id);
+				Thread.sleep(p.getWaitTime());
+				window.updateView(p.getPicture());
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

@@ -23,6 +23,9 @@ public class CameraButton extends JButton implements ActionListener {
 
 	public CameraButton(String name, String ip, int port, int id, ClientMonitor clientMonitor) {
 		super(name);
+		this.ip=ip;
+		this.port=port;
+		this.id=id;
 		this.clientMonitor=clientMonitor;
 		setVerticalTextPosition(SwingConstants.BOTTOM);
 		setHorizontalTextPosition(SwingConstants.CENTER);
