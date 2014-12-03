@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import client.Picture;
+
 public class ViewWindow extends JFrame {
 	private ImagePanel imagePanel;
 	private ImageIcon videoFeed;
@@ -29,8 +31,8 @@ public class ViewWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
-	public void updateView(ImageIcon picture) {
-		imagePanel.setPicture(picture);
+	public void updateView(Picture picture) {
+		imagePanel.setPicture(picture.getPicture());
 		// Update picture and settings
 	}
 
