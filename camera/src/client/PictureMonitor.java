@@ -9,8 +9,19 @@ import java.util.LinkedList;
  */
 public class PictureMonitor {
 	private HashMap<Integer,LinkedList<Picture>> pictures; 
+	private boolean forcedMode;
 	public PictureMonitor(){
 		pictures=new HashMap<Integer,LinkedList<Picture>>();
+		forcedMode = false;
+	}
+	
+	public synchronized void setMode(int mode){
+		
+	}
+	
+	public synchronized void setForcedMode(int mode){
+		setMode(mode);
+		forcedMode = true;
 	}
 	/**
 	 * Redisters a new Picture source which will be able to fetch pictures.
