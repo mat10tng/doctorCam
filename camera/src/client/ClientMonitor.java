@@ -1,12 +1,11 @@
 package client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.HashMap;
 
 public class ClientMonitor {
-	private ArrayList<ConnectionData> queue;
-	private HashMap<Integer,ArrayList<ClientSendData>> sendData;
+	private LinkedList<ConnectionData> queue;
+	private HashMap<Integer,LinkedList<ClientSendData>> sendData;
 	private LinkedList<Picture> pictures;
 	private int cameraMode;
 	private boolean forcedMode;
@@ -17,8 +16,8 @@ public class ClientMonitor {
 	 */
 	public ClientMonitor() {
 		forcedMode=false;
-		queue = new ArrayList<ConnectionData>();
-		sendData=new HashMap<Integer,ArrayList<ClientSendData>>();
+		queue = new LinkedList<ConnectionData>();
+		sendData=new HashMap<Integer,LinkedList<ClientSendData>>();
 		pictures= new LinkedList<Picture>();
 		cameraMode=Constants.CameraMode.IDLE_MODE;
 	}
@@ -30,7 +29,7 @@ public class ClientMonitor {
 	 * */
 	public synchronized void addConnectionData(ConnectionData data){
 		if(data.getAction()==Constants.ConnectionActions.OPEN_CONNECTION){
-			sendData.put(data.getID(), new ArrayList<ClientSendData>());
+			sendData.put(data.getID(), new LinkedList<ClientSendData>());
 		}
 		queue.add(data);
 		notifyAll();
@@ -53,7 +52,7 @@ public class ClientMonitor {
 		while(queue.isEmpty()){
 			wait();
 		}
-		return queue.remove(0);
+		return queue.pop();
 	}
 	/**
 	 * Called by ClientReceiver when new motion detected package has arrived.
@@ -80,7 +79,7 @@ public class ClientMonitor {
 			System.exit(1);
 		}
 		ClientSendData changeModeData=new ClientSendData(Constants.ClientSendTypes.SENDDATA,modeData);
-		for (ArrayList<ClientSendData> queue:sendData.values()){
+		for (LinkedList<ClientSendData> queue:sendData.values()){
 			queue.add(changeModeData);
 		}	
 	}
@@ -94,7 +93,7 @@ public class ClientMonitor {
 		while(sendData.get(id).isEmpty()){
 			wait();
 		}
-		return sendData.get(id).remove(0);
+		return sendData.get(id).pop();
 	}
 	/**
 	 * Sets the current Camera Mode
