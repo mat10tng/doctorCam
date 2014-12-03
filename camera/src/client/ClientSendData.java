@@ -1,9 +1,6 @@
 package client;
 
 public class ClientSendData {
-	public static final int INTERRUPT=0;
-	public static final int SENDDATA=1;
-	
 	private byte[] httpData;
 	private int status;
 	public ClientSendData(int status, byte[] httpData){
@@ -17,9 +14,9 @@ public class ClientSendData {
 		return status;
 	}
 	public boolean isCloseConnection(){
-		return status==INTERRUPT;
+		return status==Constants.ClientSendTypes.INTERRUPT;
 	}
 	public boolean isSendData(){
-		return status==SENDDATA;
+		return status==Constants.ClientSendTypes.SENDDATA;
 	}
 }
