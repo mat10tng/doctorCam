@@ -8,7 +8,6 @@ public class ClientMonitor {
 	private ArrayList<ConnectionData> queue;
 	private HashMap<Integer,ArrayList<ClientSendData>> sendData;
 	private LinkedList<Picture> pictures;
-	private int viewMode;
 	private int cameraMode;
 	private boolean motionDetected;
 	
@@ -21,7 +20,6 @@ public class ClientMonitor {
 		queue = new ArrayList<ConnectionData>();
 		sendData=new HashMap<Integer,ArrayList<ClientSendData>>();
 		pictures= new LinkedList<Picture>();
-		viewMode=Constants.ViewMode.AUTO_MODE;
 		cameraMode=Constants.CameraMode.AUTO_MODE;
 	}
 	
@@ -32,6 +30,7 @@ public class ClientMonitor {
 	 * */
 	public synchronized void addConnectionData(ConnectionData data){
 		queue.add(data);
+		notifyAll();
 	}
 	/**
 	 * Called by ClientReceiver when a new picture package has arrived
@@ -39,6 +38,7 @@ public class ClientMonitor {
 	 */
 	public synchronized void addPicture(Picture picture){
 		pictures.add(picture);
+		notifyAll();
 	}
 	/**
 	 * Called by ProcessHandler to get new connection information.
@@ -58,6 +58,7 @@ public class ClientMonitor {
 	 */
 	public synchronized void motionDetected(){
 		motionDetected=true;
+		notifyAll();
 	}
 	
 	/**
@@ -78,19 +79,15 @@ public class ClientMonitor {
 	 */
 	public synchronized void setCameraMode(int mode){
 		cameraMode=mode;
-	}
-	/**
-	 * Sets the current View Mode
-	 * @param mode: a constant listed in Constants.ViewMode
-	 */
-	public synchronized void setViewMode(int mode){
-		viewMode=mode;
+		notifyAll();
 	}
 	public synchronized void addNewConnection(int ID){
 		sendData.put(ID, new ArrayList<ClientSendData>());
+		notifyAll();
 	}
 	public synchronized void removeConnection(int ID){
 		sendData.remove(ID);
+		notifyAll();
 	}
 	public synchronized Picture getPicture() throws InterruptedException{
 		while(pictures.isEmpty()){
@@ -98,7 +95,7 @@ public class ClientMonitor {
 		}
 		return pictures.pop();
 	}
-	public synchronized boolean connectionExists(int ID){
+	private synchronized boolean connectionExists(int ID){
 		return sendData.keySet().contains(ID);
 	}
 }

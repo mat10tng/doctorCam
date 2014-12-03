@@ -8,11 +8,11 @@ import client.*;
 
 public class ControlWindow extends JFrame {
 
-	public ControlWindow(ClientMonitor monitor) {
+	public ControlWindow(ClientMonitor clientMonitor,PictureMonitor pictureMonitor) {
 		super("Control");
 		ImageIcon img = new ImageIcon("control.png");
 		setIconImage(img.getImage());
-		this.add(new ControlPanel(monitor));
+		this.add(new ControlPanel(clientMonitor,pictureMonitor));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		setSize(300, 350);
@@ -32,6 +32,6 @@ public class ControlWindow extends JFrame {
 		PictureHandler picHand = new PictureHandler(cmonitor,pmonitor);
 		procHand.start();
 		picHand.start();
-		new ControlWindow(cmonitor);
+		new ControlWindow(cmonitor,pmonitor);
 	}
 }

@@ -4,21 +4,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JRadioButton;
-
-import client.ClientMonitor;
 import client.Constants;
+import client.PictureMonitor;
 
 public class AutoSyncButton extends JRadioButton implements ActionListener{
-	private ClientMonitor monitor;
-	public AutoSyncButton(ClientMonitor monitor) {
+	private PictureMonitor pictureMonitor;
+	public AutoSyncButton(PictureMonitor pictureMonitor) {
 		super("Auto");
-		this.monitor = monitor;
+		this.pictureMonitor=pictureMonitor;
 		addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		monitor.setViewMode(Constants.ViewMode.AUTO_MODE);
+		pictureMonitor.setForcedMode(Constants.ViewMode.AUTO_MODE);
 	}
 
 }

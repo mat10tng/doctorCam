@@ -12,7 +12,7 @@ import client.ConnectionData;
 import client.Constants;
 
 public class CameraButton extends JButton implements ActionListener {
-	private ClientMonitor monitor;
+	private ClientMonitor clientMonitor;
 	private String ip;
 	private int port;
 	private int id;
@@ -21,8 +21,9 @@ public class CameraButton extends JButton implements ActionListener {
 	private Boolean pressed;
 	private String name;
 
-	public CameraButton(String name, String ip, int port, int id, ClientMonitor monitor) {
+	public CameraButton(String name, String ip, int port, int id, ClientMonitor clientMonitor) {
 		super(name);
+		this.clientMonitor=clientMonitor;
 		setVerticalTextPosition(SwingConstants.BOTTOM);
 		setHorizontalTextPosition(SwingConstants.CENTER);
 		this.name = name;
@@ -44,13 +45,13 @@ public class CameraButton extends JButton implements ActionListener {
 			setIcon(cam);
 			pressed = false;
 			
-			monitor.addConnectionData(new ConnectionData(ip,port,id,Constants.ConnectionActions.CLOSE_CONNECTION));
+			clientMonitor.addConnectionData(new ConnectionData(ip,port,id,Constants.ConnectionActions.CLOSE_CONNECTION));
 		} else {
 
 			setText("kill " + name);
 			setIcon(killcam);
 			pressed = true;
-			monitor.addConnectionData(new ConnectionData(ip,port,id,Constants.ConnectionActions.OPEN_CONNECTION));
+			clientMonitor.addConnectionData(new ConnectionData(ip,port,id,Constants.ConnectionActions.OPEN_CONNECTION));
 		}
 	}
 

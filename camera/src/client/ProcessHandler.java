@@ -72,6 +72,7 @@ public class ProcessHandler extends Thread {
 
 			}
 		} catch (InterruptedException e1) {
+			System.out.println("interrupted thread, errorMessege"+e1.getMessage());
 			Thread.currentThread().interrupt();
 		} catch (UnknownHostException e) {
 			System.out.println("Failed to connect to Host");

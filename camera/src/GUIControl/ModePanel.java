@@ -7,19 +7,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import client.ClientMonitor;
+import client.PictureMonitor;
 
 public class ModePanel extends JPanel {
 
-	public ModePanel(ClientMonitor monitor) {
+	public ModePanel(ClientMonitor clientMonitor,PictureMonitor pictureMonitor) {
 		super(new BorderLayout());
 		ButtonGroup syncGroup = new ButtonGroup();
 		ButtonGroup picGroup = new ButtonGroup();
-		AsynchronizedButton asyncButton = new AsynchronizedButton(monitor);
-		SynchronizedButton syncButton = new SynchronizedButton(monitor);
-		IdleButton idleButton = new IdleButton(monitor);
-		MovieButton movieButton = new MovieButton(monitor);
-		AutoSyncButton autoSyncButton = new AutoSyncButton(monitor);
-		AutoPicButton autoPicButton = new AutoPicButton(monitor);
+		AsynchronizedButton asyncButton = new AsynchronizedButton(pictureMonitor);
+		SynchronizedButton syncButton = new SynchronizedButton(pictureMonitor);
+		IdleButton idleButton = new IdleButton(clientMonitor);
+		MovieButton movieButton = new MovieButton(clientMonitor);
+		AutoSyncButton autoSyncButton = new AutoSyncButton(pictureMonitor);
+		AutoPicButton autoPicButton = new AutoPicButton(clientMonitor);
 		syncGroup.add(asyncButton);
 		syncGroup.add(syncButton);
 		syncGroup.add(autoSyncButton);

@@ -5,21 +5,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JRadioButton;
 
-import client.ClientMonitor;
 import client.Constants;
+import client.PictureMonitor;
 
 public class AsynchronizedButton extends JRadioButton implements ActionListener {
-	private ClientMonitor monitor;
+	private PictureMonitor pictureMonitor;
 
-	public AsynchronizedButton(ClientMonitor monitor) {
+	public AsynchronizedButton(PictureMonitor pictureMonitor) {
 		super("Asynchronize");
 		addActionListener(this);
-		this.monitor = monitor;
+		this.pictureMonitor=pictureMonitor;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		monitor.setViewMode(Constants.ViewMode.ASYNC_MODE);
+		pictureMonitor.setForcedMode(Constants.ViewMode.ASYNC_MODE);
 	}
 
 }

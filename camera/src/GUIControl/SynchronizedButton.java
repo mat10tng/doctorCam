@@ -7,17 +7,18 @@ import javax.swing.JRadioButton;
 
 import client.ClientMonitor;
 import client.Constants;
+import client.PictureMonitor;
 
 public class SynchronizedButton extends JRadioButton implements ActionListener {
-	private ClientMonitor monitor;
-	public SynchronizedButton(ClientMonitor monitor) {
+	private PictureMonitor pictureMonitor;
+	public SynchronizedButton(PictureMonitor pictureMonitor) {
 		super("Synchronize");
-		this.monitor = monitor;
+		this.pictureMonitor = pictureMonitor;
 		addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		monitor.setViewMode(Constants.ViewMode.SYNC_MODE);	
+		pictureMonitor.setForcedMode(Constants.ViewMode.SYNC_MODE);	
 	}
 }
