@@ -1,7 +1,7 @@
 package server;
 
-import se.lth.cs.eda040.fakecamera.*;
-//import se.lth.cs.eda040.proxycamera.AxisM3006V;
+//import se.lth.cs.eda040.fakecamera.*;
+import se.lth.cs.eda040.proxycamera.AxisM3006V;
 
 /**
  * Waits for the Camera H.W. to generate a picture. When a new picture exists it
@@ -32,7 +32,7 @@ public class CamListener extends Thread {
 		long timeDifference;
 		int length;
 		camera.init();
-		//camera.setProxy(adress,port);
+		camera.setProxy(adress,port);
 		camera.connect();
 		
 		while(!Thread.interrupted()){

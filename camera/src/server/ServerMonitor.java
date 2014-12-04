@@ -14,13 +14,12 @@ public class ServerMonitor {
 	public static final int LEN_SIZE = 4;
 	public static final int TS_SIZE = 8;
 
-	public static final byte[] MOTION_DETECTED_ID = { 1 };
 	public static final byte[] PICTURE_DATA_ID = { 0 };
 
 	private int currentMode; // Depends on clientMode as well
 								// as if motion is detected by theCamera H.W.
 	private byte[] lastPictureData; // The most recent picture from Camera H.W.
-	private boolean newData;
+	private boolean newPictureData;
 	private boolean detectedMotion;
 
 	private boolean newInputStream;
@@ -31,7 +30,7 @@ public class ServerMonitor {
 
 	public ServerMonitor() {
 		setMode(IDLE_MODE);
-		newData = false;
+		newPictureData = false;
 		newInputStream = false;
 		newInputStream = false;
 		endConnection = false;
@@ -86,23 +85,17 @@ public class ServerMonitor {
 
 	}
 
-	public synchronized byte[] getData() throws InterruptedException {
-		while (!newData) {
+	public synchronized byte[] getPictureData() throws InterruptedException {
+		while (!newPictureData) {
 			wait();
 		}
-		newData = false;
-//		if (detectedMotion) {
-//			detectedMotion = false;
-//			System.out.println("motion detected");
-//			return MOTION_DETECTED_ID;
-//		}
-//		System.out.println("bild package begin");
-//		System.out.println(lastPictureData[0]);
-//		for (int i = 0;i<10;i++){
-//			System.out.println("s:    "+lastPictureData[i]);
-//		}
-//		System.out.println("-----------------");
+		newPictureData = false;
+
 		return lastPictureData;
+	}
+	public synchronized boolean newMotionData() throws InterruptedException {
+		detectedMotion = false;
+		return detectedMotion;
 	}
 
 	public synchronized void setMode(int read) {
@@ -137,7 +130,7 @@ public class ServerMonitor {
 	public synchronized void newPictureData(byte[] jpeg, byte[] currentTime,
 			int dataLength) {
 		// TODO Auto-generated method stub
-		newData = true;
+		newPictureData = true;
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
 		byte[] our = intToByte(dataLength);
