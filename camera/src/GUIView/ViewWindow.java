@@ -25,7 +25,7 @@ public class ViewWindow extends JFrame {
 		setLayout(new BorderLayout());
 		this.add(settings, BorderLayout.SOUTH);
 		this.add(imagePanel, BorderLayout.NORTH);
-		this.setSize(700, 500);
+		this.setSize(700, 550);
 		this.setVisible(true);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
