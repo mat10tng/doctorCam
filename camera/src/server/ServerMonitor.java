@@ -17,4 +17,8 @@ public class ServerMonitor {
 		// TODO Auto-generated method stub
 		
 	}
+	public byte[] getData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

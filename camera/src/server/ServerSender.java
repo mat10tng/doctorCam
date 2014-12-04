@@ -29,15 +29,9 @@ public class ServerSender extends Thread{
 			
 			
 			try {
-				int id = inStream.read();
-				switch(id){
-				case END_CONNECTION:
-					terminate = true;
-					notifyAll();
-					break;
-				case MODE_ACTION:
-					serverMonitor.setMode(inStream.read());
-				}
+				byte[] data  = serverMonitor.getData();
+				outputStream.write(data);
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

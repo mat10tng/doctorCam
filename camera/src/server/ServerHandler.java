@@ -26,6 +26,7 @@ public class ServerHandler extends Thread{
 				OutputStream outStream = s.getOutputStream();		
 				serverSender.setNewOutStream(outStream);
 				serverReceiver.setNewInStream(inStream);
+				notifyAll();
 				while(!serverReceiver.endConnection()){
 					wait();
 				}
