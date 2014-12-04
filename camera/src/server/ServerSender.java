@@ -29,9 +29,10 @@ public class ServerSender extends Thread{
 			
 			
 			try {
-				wait();
+				if(serverMonitor.newData()){
 				outputStream.write( serverMonitor.getData());
-				
+				}
+				wait();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
