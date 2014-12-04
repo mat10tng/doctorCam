@@ -45,6 +45,7 @@ public class ClientSender extends Thread {
 					primitiveBytePackage[i]=packagedData[i].byteValue();
 				}
 				output.write(primitiveBytePackage);
+				output.flush();
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
