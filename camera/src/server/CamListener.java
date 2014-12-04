@@ -11,21 +11,30 @@ import se.lth.cs.eda040.fakecamera.*;
  */
 
 public class CamListener implements Runnable {
-	private ServerMonitor sm;
+	private ServerMonitor serverMonitor;
 
 	@Override
 	public void run() {
 		AxisM3006V camera = new AxisM3006V();
 		camera.init();
 		camera.connect();
-		for (int i = 0; i < 100; i++) {
-			byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
+		long lastTimeStamp = 0;
+		while(!Thread.interrupted()){
+			byte[] data = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 			camera.getJPEG(jpeg, 0);
 			if (camera.motionDetected()) {
-				sm.setMode(2);
+				serverMonitor.setDetected();
 				notifyAll();
-			} else {
-				sm.setMode(1);
+			}
+			switch(serverMonitor.getCurrentMode()){
+			byte[] currentTime;
+			camera.getTime(currentTime, offset);
+			case ServerMonitor.IDLE_MODE:
+				if(camera.getTime(target, offset);)
+				break;
+			case ServerMonitor.MOVIE_MODE:
+				
+				break;
 			}
 		}
 	}

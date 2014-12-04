@@ -1,16 +1,19 @@
 package server;
 
 public class ServerMonitor {
-	private static final int IDLE_MODE = 1;
-	private static final int MOVIE_MODE = 2;
+	public static final int IDLE_MODE = 1;
+	public static final int MOVIE_MODE = 2;
+	public static final byte[] MOTION_DETECTED_PACKAGE = {1};
 	private int currentMode; // Depends on clientMode as well 
 									//as if motion is detected by theCamera H.W.
 	private byte[] lastPicture; // The most recent picture from Camera H.W.
 	private boolean detectedMotion;
+	private boolean newData;
 	
 	public ServerMonitor() {
 		setMode(IDLE_MODE);
 		detectedMotion = false;
+		newData = false;
 	}
 	
 	public synchronized void setMode(int read) {
@@ -29,7 +32,10 @@ public class ServerMonitor {
 	public int getCurrentMode(){
 		return currentMode;
 	}
-	public byte[] getPicture() {
+	public synchronized byte[] getData() {
+		if(detectedMotion){
+			return 
+		}
 		return lastPicture;
 	}
 	public synchronized void newPicture(byte[] newPicture){
@@ -37,7 +43,7 @@ public class ServerMonitor {
 		notifyAll();
 	}
 
-	public boolean detectedMotion() {
+	public synchronized boolean detectedMotion() {
 		return detectedMotion;
 	}
 	public void setDetected(){

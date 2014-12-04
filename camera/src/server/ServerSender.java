@@ -30,10 +30,7 @@ public class ServerSender extends Thread{
 			
 			try {
 				wait();
-				if(serverMonitor.detectedMotion()){
-					outputStream.write(serverMonitor.movieMode());
-				}
-				outputStream.write( serverMonitor.getPicture());
+				outputStream.write( serverMonitor.getData());
 				
 			} catch (IOException e) {
 				e.printStackTrace();
