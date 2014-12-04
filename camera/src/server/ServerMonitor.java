@@ -1,5 +1,10 @@
 package server;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
 public class ServerMonitor {
 	public static final int IDLE_MODE = 1;
 	public static final int MOVIE_MODE = 2;
@@ -15,11 +20,102 @@ public class ServerMonitor {
 	private byte[] lastPictureData; // The most recent picture from Camera H.W.
 	private boolean newData;
 	private boolean detectedMotion;
+
+	private boolean newInputStream;
+	private boolean newOutputStream;
+	private Socket socket;
+	
+	private boolean endConnection;
 	
 	public ServerMonitor() {
 		setMode(IDLE_MODE);
 		newData = false;
+		newInputStream = false;
+		newInputStream = false;
+		endConnection = false;
 	}
+	
+	
+	// Connection relate stuff
+	public synchronized void openNewConnection(Socket s){
+		this.socket = s;
+		newInputStream = true;
+		newOutputStream = true;
+		notifyAll();
+	}
+	
+	public synchronized InputStream getInputStream() throws IOException{
+		while(!newInputStream){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return socket.getInputStream();
+	}
+	
+	public synchronized OutputStream getOutputStream() throws IOException{
+		while(!newOutputStream){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return socket.getOutputStream();
+	}
+	
+	public synchronized void receivedTerminateConnection() {
+		// TODO Auto-generated method stub
+		endConnection = true;
+		notifyAll();
+	}
+	
+	public synchronized void endConnection() {
+		try {
+			if(!endConnection){
+				wait();
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		newInputStream = false;
+		newInputStream = false;
+		notifyAll();
+		
+}
+
+	
+	// Sender ask for new data , 
+	public synchronized  void newData() {
+		try {
+			if(!newData){
+			wait();
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public synchronized byte[] getData() {
+		if(detectedMotion){
+			detectedMotion = false;
+			return MOTION_DETECTED_ID;
+		}
+		return lastPictureData;
+	}
+
+	
+	
+	
+	
+	
+	
 	
 	public synchronized void setMode(int read) {
 		switch(read){
@@ -37,13 +133,6 @@ public class ServerMonitor {
 	public int getCurrentMode(){
 		return currentMode;
 	}
-	public synchronized byte[] getData() {
-		if(detectedMotion){
-			detectedMotion = false;
-			return MOTION_DETECTED_ID;
-		}
-		return lastPictureData;
-	}
 
 	
 	public synchronized int movieMode() {
@@ -52,9 +141,7 @@ public class ServerMonitor {
 		return currentMode;
 	}
 	
-	public synchronized  boolean newData() {
-		return newData;
-	}
+
 	
 	public synchronized void  detectedMotion() {
 		detectedMotion = true;
@@ -75,6 +162,9 @@ public class ServerMonitor {
 	}
 	
 	
+	
+	
+	
 	private int setData(byte[] lastPictureData,byte[] data, int offset){
 		for(int i = offset; i<data.length;i++){
 			lastPictureData[i] = data[i-offset];
@@ -89,5 +179,9 @@ public class ServerMonitor {
 		}
 		return bytes;
 	}
+
+
+
+
 
 }

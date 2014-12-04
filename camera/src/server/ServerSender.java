@@ -19,33 +19,15 @@ public class ServerSender extends Thread{
 	}
 	public void run(){
 		while(!Thread.interrupted()){
-			while(!newStream)
-				try {
-					wait();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			
-			
 			try {
-				if(serverMonitor.newData()){
+				outputStream = serverMonitor.getOutputStream();
+				serverMonitor.newData();
 				outputStream.write( serverMonitor.getData());
 				}
-				wait();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			catch (IOException e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
-
-	public void setNewOutStream(OutputStream outStream) {
-		this.outputStream = outStream;
-	}
-
 
 }

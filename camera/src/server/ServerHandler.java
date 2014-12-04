@@ -10,32 +10,28 @@ public class ServerHandler extends Thread{
 	private ServerSocket serverSocket;
 	private ServerSender serverSender;
 	private ServerReceiver serverReceiver;
+	private ServerMonitor serverMonitor;
 	public ServerHandler(int port ,ServerMonitor serverMonitor) throws IOException {
 		// TODO Auto-generated constructor stub
 		serverSocket = new ServerSocket(port);
 		serverSender = new ServerSender(serverMonitor);
 		serverReceiver = new ServerReceiver(serverMonitor);
+		this.serverMonitor = serverMonitor;
 		serverSender.start();
 		serverReceiver.start();
 	}
 	public void run(){
 		while(!Thread.interrupted()){
-			try {
-				Socket s = serverSocket.accept();
-				InputStream inStream = s.getInputStream();
-				OutputStream outStream = s.getOutputStream();		
-				serverSender.setNewOutStream(outStream);
-				serverReceiver.setNewInStream(inStream);
-				notifyAll();
-				while(!serverReceiver.endConnection()){
-					wait();
+				Socket socket;
+				try {
+					socket = serverSocket.accept();
+					serverMonitor.openNewConnection(socket);
+					serverMonitor.endConnection();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				s.close();
-			} catch (IOException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
+	
+		}	
 	}
 }
