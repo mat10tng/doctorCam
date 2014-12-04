@@ -21,9 +21,21 @@ public class ServerSender extends Thread{
 		while(!Thread.interrupted()){
 			try {
 				outputStream = serverMonitor.getOutputStream();
-				outputStream.write( serverMonitor.getData());
-				outputStream.flush();
+				byte[] data=serverMonitor.getData();
+				int length=data.length;
+				if(length>10){
+					System.out.println("picturepackage");
 				}
+				outputStream.write(data,0,data.length);
+				outputStream.flush();
+				while(length>0){
+					Thread.sleep(1000);
+					length--;
+				}
+				System.out.println("afterwait");
+				//
+				//wait();
+			}
 			catch (IOException e) {
 				e.printStackTrace();
 			}

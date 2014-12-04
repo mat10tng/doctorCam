@@ -94,8 +94,8 @@ public class ServerMonitor {
 //		}
 		System.out.println("bild package begin");
 		System.out.println(lastPictureData[0]);
-		for (int i = 0;i<4;i++){
-			System.out.println(lastPictureData[i]);
+		for (int i = 0;i<10;i++){
+			System.out.println("s:    "+lastPictureData[i]);
 		}
 		System.out.println("-----------------");
 
@@ -135,6 +135,9 @@ public class ServerMonitor {
 	public synchronized void newPictureData(byte[] jpeg, byte[] currentTime,
 			int dataLength) {
 		// TODO Auto-generated method stub
+		if (!endConnection){
+			System.out.println("hi breakpoint");
+		}
 		newData = true;
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
@@ -160,6 +163,9 @@ public class ServerMonitor {
 		bytes[index++] = (byte) ((data & 0x00ff0000)>>16);
 		bytes[index++] = (byte) ((data & 0x0000ff00)>>8);
 		bytes[index++] = (byte) ((data & 0x000000ff));
+		
+
+		
 		return bytes;
 	}
 
