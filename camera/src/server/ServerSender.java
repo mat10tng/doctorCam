@@ -21,10 +21,13 @@ public class ServerSender extends Thread{
 		while(!Thread.interrupted()){
 			try {
 				outputStream = serverMonitor.getOutputStream();
-				serverMonitor.newData();
 				outputStream.write( serverMonitor.getData());
 				}
 			catch (IOException e) {
+				e.printStackTrace();
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

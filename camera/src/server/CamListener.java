@@ -1,6 +1,7 @@
 package server;
 
-import se.lth.cs.eda040.fakecamera.*;
+//import se.lth.cs.eda040.fakecamera.*;
+import se.lth.cs.eda040.proxycamera.AxisM3006V;
 
 /**
  * Waits for the Camera H.W. to generate a picture. When a new picture exists it
@@ -25,7 +26,7 @@ public class CamListener extends Thread {
 		AxisM3006V camera = new AxisM3006V();
 		byte[] jpeg;
 		byte[] currentTime;
-		byte[] oldTime = {0,0,0,0,0,0,0,0};
+		byte[] oldTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
 		long timeDifference;
 		int length;
 		camera.init();
@@ -35,10 +36,9 @@ public class CamListener extends Thread {
 		while(!Thread.interrupted()){
 			jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 			currentTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
-			timeDifference  = timeDiff(currentTime,oldTime);
-
 			length = camera.getJPEG(jpeg, 0);
 			camera.getTime(currentTime, 0);
+			timeDifference  = timeDiff(currentTime,oldTime);
 
 			if (camera.motionDetected() 
 					&& serverMonitor.getCurrentMode() == ServerMonitor.IDLE_MODE) {
@@ -46,14 +46,16 @@ public class CamListener extends Thread {
 			}
 			switch(serverMonitor.getCurrentMode()){
 			case ServerMonitor.IDLE_MODE:
-				if(timeDifference > IDLE_MODE_TIME) 
+				if(timeDifference > IDLE_MODE_TIME){
+					System.out.println(length);
 					serverMonitor.newPictureData(jpeg,currentTime,length);
+					oldTime = currentTime;
+				}
 				break;
 			case ServerMonitor.MOVIE_MODE:
 					serverMonitor.newPictureData(jpeg,currentTime,length);
 				break;
 			}
-			oldTime = currentTime;
 		}
 	}
 	private long timeDiff(byte[] newTime, byte[] oldTime){

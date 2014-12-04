@@ -53,6 +53,7 @@ public class ClientReceiver extends Thread {
 					int length = 0;
 					for(int i = 0; i<4;i++){
 						length = length<<8;
+						System.out.println();
 						int temp = input.read();
 						length += (temp-128);
 					}

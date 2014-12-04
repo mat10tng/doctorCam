@@ -35,6 +35,9 @@ public class ServerReceiver extends Thread{
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 		}
