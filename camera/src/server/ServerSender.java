@@ -29,10 +29,12 @@ public class ServerSender extends Thread{
 			
 			
 			try {
-				
-				outputStream.write( serverMonitor.getData());
-				
+				wait();
+				outputStream.write( serverMonitor.getPicture());
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

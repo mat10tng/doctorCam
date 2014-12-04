@@ -17,8 +17,12 @@ public class ServerMonitor {
 		// TODO Auto-generated method stub
 		
 	}
-	public byte[] getData() {
+	public byte[] getPicture() {
 		// TODO Auto-generated method stub
-		return null;
+		return lastPicture;
+	}
+	public void newPicture(byte[] newPicture){
+		lastPicture = newPicture;
+		notifyAll();
 	}
 }
