@@ -42,9 +42,11 @@ public class ServerMonitor {
 	}
 	public void setDetected(){
 		detectedMotion = true;
+		setMode(MOVIE_MODE);
 	}
+	
 	public int movieMode() {
 		detectedMotion = false;
-		return MOVIE_MODE;
+		return currentMode;
 	}
 }
