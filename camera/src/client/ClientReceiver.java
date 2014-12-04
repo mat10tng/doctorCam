@@ -39,24 +39,26 @@ public class ClientReceiver extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-		ArrayList<Byte> dataPackage = new ArrayList<Byte>();
+
 		try {
 			while (!isInterrupted()) {
 				// wait for package to be read
-				int tempData = input.read();
-				while (tempData > -1) {
-					//cast from int to byte
-					dataPackage.add((byte) (tempData - 128));
-					tempData = input.read();
-				}
+				int packageType = input.read();
+				
 				// proccess package to information.
 				// TODO CONSTANTS ADDED FROM SERVERSIDE
-				byte packageType = dataPackage.get(0);
-				switch (packageType) {
+
+				switch ((byte)(packageType-128)) {
 				case (0 /* Picture Package */):
-					dataPackage.remove(0);
-					monitor.addPicture(new Picture((Byte[]) dataPackage
-							.toArray(), id));
+					int length = 0;
+					for(int i = 0; i<4;i++){
+						length = length<<8;
+						int temp = input.read();
+						length += (temp-128);
+					}
+					byte[] dataPackage = new byte[length+8];
+					input.read(dataPackage);
+					monitor.addPicture(new Picture(dataPackage, id));
 					break;
 				case (1 /* Motion package */):
 					monitor.motionDetected();

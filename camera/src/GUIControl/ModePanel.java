@@ -15,6 +15,8 @@ public class ModePanel extends JPanel {
 		super(new BorderLayout());
 		ButtonGroup syncGroup = new ButtonGroup();
 		ButtonGroup picGroup = new ButtonGroup();
+		ResetPicButton resetPicButton = new ResetPicButton(clientMonitor);
+		ResetSyncButton resetSyncButton = new ResetSyncButton(pictureMonitor);
 		AsynchronizedButton asyncButton = new AsynchronizedButton(pictureMonitor);
 		SynchronizedButton syncButton = new SynchronizedButton(pictureMonitor);
 		IdleButton idleButton = new IdleButton(clientMonitor);
@@ -27,11 +29,13 @@ public class ModePanel extends JPanel {
 		picGroup.add(movieButton);
 		picGroup.add(idleButton);
 		picGroup.add(autoPicButton);
+		autoSyncButton.setSelected(true);
+		autoPicButton.setSelected(true);
 		this.add(new JLabel("Modes:"), BorderLayout.PAGE_START);
-		this.add(new ButtonGroupPanel(autoSyncButton, asyncButton,syncButton),
+		this.add(new ButtonGroupPanel(resetSyncButton,autoSyncButton, asyncButton,syncButton),
 				BorderLayout.LINE_START);
 
-		this.add(new ButtonGroupPanel(autoPicButton,idleButton, movieButton),
+		this.add(new ButtonGroupPanel(resetPicButton,autoPicButton,idleButton, movieButton),
 				BorderLayout.LINE_END);
 
 	}

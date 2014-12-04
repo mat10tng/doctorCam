@@ -19,16 +19,16 @@ public class Picture {
 	 * @param data: The data package to be converted
 	 * @param id: which network this data originated from
 	 */
-	public Picture(Byte[] data, int id) {
+	public Picture(byte[] dataPackage, int id) {
 		this.id  = id;
 		waitTime = 0;
 		byte[] byteTimestamp = new byte[8];
-		byte[] bytePicture = new byte[data.length - 9];
-		for (int i = 0; i < data.length; i++) {
+		byte[] bytePicture = new byte[dataPackage.length - 9];
+		for (int i = 0; i < dataPackage.length; i++) {
 			if (i < 8) {
-				byteTimestamp[i] = data[i].byteValue();
+				byteTimestamp[i] = dataPackage[i];
 			} else {
-				bytePicture[i - 8] = data[i].byteValue();
+				bytePicture[i - 8] = dataPackage[i];
 			}
 		}
 		timeStamp=byteTimeToLongTime(byteTimestamp);
