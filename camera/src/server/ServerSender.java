@@ -29,18 +29,14 @@ public class ServerSender extends Thread{
 			
 			
 			try {
-				byte[] data  = serverMonitor.getData();
-				outputStream.write(data);
+				
+				outputStream.write( serverMonitor.getData());
 				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 		}
-	}
-
-	public void close() {
-		// TODO Auto-generated method stub
 	}
 
 	public void setNewOutStream(OutputStream outStream) {
