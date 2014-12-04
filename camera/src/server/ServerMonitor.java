@@ -45,9 +45,6 @@ public class ServerMonitor {
 		return lastPictureData;
 	}
 
-
-
-
 	
 	public synchronized int movieMode() {
 		detectedMotion = false;
@@ -76,12 +73,15 @@ public class ServerMonitor {
 		offset = setData(lastPictureData,jpeg,offset);
 		notifyAll();
 	}
+	
+	
 	private int setData(byte[] lastPictureData,byte[] data, int offset){
 		for(int i = offset; i<data.length;i++){
 			lastPictureData[i] = data[i-offset];
 		}
 		return offset+ data.length;
 	}
+	
 	private byte[] intToByte(int data){
 		byte[] bytes = new byte[4];
 		for (int i = 0; i < 4; i++) {

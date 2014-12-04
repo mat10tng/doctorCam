@@ -10,11 +10,17 @@ import se.lth.cs.eda040.fakecamera.*;
  * 
  */
 
-public class CamListener implements Runnable {
+public class CamListener extends Thread {
 	private ServerMonitor serverMonitor;
+	private String adress;
+	private int port;
 	private final static long IDLE_MODE_TIME = 5000;
 
-	@Override
+	public CamListener(ServerMonitor serverMonitor, String adress, int port){
+		this.adress = adress;
+		this.port = port;
+		this.serverMonitor = serverMonitor;
+	}
 	public void run() {
 		AxisM3006V camera = new AxisM3006V();
 		byte[] jpeg;
@@ -23,6 +29,7 @@ public class CamListener implements Runnable {
 		long timeDifference;
 		int length;
 		camera.init();
+		camera.setProxy(adress,port);
 		camera.connect();
 		
 		while(!Thread.interrupted()){
