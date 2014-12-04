@@ -1,24 +1,34 @@
 package server;
 
 public class ServerMonitor {
-	private boolean closeRequested; //If true, the connection should be closed.
-	private static final int AUTO = 0;
-	private static final int FORCED_IDLE = 1;
-	private static final int FORCED_MOVIE = 2;
+	private static final int IDLE_MODE = 1;
+	private static final int MOVIE_MODE = 2;
 	private int currentFrequency; // Depends on clientMode as well 
 									//as if motion is detected by theCamera H.W.
 	private byte[] lastPicture; // The most recent picture from Camera H.W.
-	private boolean sendPicture; // Depends on currentFrequency and the time.
 	boolean sendMotionDetected; // Depends on Camera H.W. and clientMode.
 	public ServerMonitor() {
-		// TODO Auto-generated constructor stub
+		setMode(IDLE_MODE);
 	}
+	
+	
 	public void setMode(int read) {
-		// TODO Auto-generated method stub
-		
+		switch(read){
+		case IDLE_MODE:
+			currentFrequency = 20;
+			System.out.println("this is idle mode");
+			break;
+		case MOVIE_MODE:
+			currentFrequency = 10;
+			System.out.println("We got movie night");
+			break;
+		}
+		notifyAll();
+	}
+	public int getCurrentFrequency(){
+		return currentFrequency;
 	}
 	public byte[] getPicture() {
-		// TODO Auto-generated method stub
 		return lastPicture;
 	}
 	public void newPicture(byte[] newPicture){
