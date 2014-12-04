@@ -22,6 +22,7 @@ public class ServerSender extends Thread{
 			try {
 				outputStream = serverMonitor.getOutputStream();
 				outputStream.write( serverMonitor.getData());
+				outputStream.flush();
 				}
 			catch (IOException e) {
 				e.printStackTrace();

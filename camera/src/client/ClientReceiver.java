@@ -43,26 +43,40 @@ public class ClientReceiver extends Thread {
 		try {
 			while (!isInterrupted()) {
 				// wait for package to be read
-				int packageType = input.read();
+				byte[] packageType = new byte[5];
+				input.read(packageType);
+				for(int i =0 ;i<5;i++){
+					System.out.println(packageType[i] + " Packagetype");
+				}
+
 				
+
 				// proccess package to information.
 				// TODO CONSTANTS ADDED FROM SERVERSIDE
-
-				switch ((byte)(packageType-128)) {
+				switch (packageType[0]) {
 				case (0 /* Picture Package */):
 					int length = 0;
-					for(int i = 0; i<4;i++){
-						length = length<<8;
-						System.out.println();
-						int temp = input.read();
-						length += (temp-128);
-					}
-					byte[] dataPackage = new byte[length+8];
+					byte[] lengthInBytes = new byte[4];
+//					input.read(lengthInBytes);
+//					for (int i = 0; i < 4; i++) {
+//						System.out.println(lengthInBytes[i] + " lengthinbytes "
+//								+ i);
+//					}
+//					length = (lengthInBytes[0] << 24) & 0xff000000
+//							| (lengthInBytes[1] << 16) & 0x00ff0000
+//							| (lengthInBytes[2] << 8) & 0x0000ff00
+//							| (lengthInBytes[3] << 0) & 0x000000ff;
+					length = (input.read(packageType)) & 0xff000000
+							| (input.read(packageType)) & 0x00ff0000
+							| (input.read(packageType)) & 0x0000ff00
+							| (input.read(packageType)) & 0x000000ff;
+					System.out.println(length);
+					byte[] dataPackage = new byte[length + 8];
 					input.read(dataPackage);
-					monitor.addPicture(new Picture(dataPackage, id));
+					//monitor.addPicture(new Picture(dataPackage, id));
 					break;
 				case (1 /* Motion package */):
-					monitor.motionDetected();
+					//monitor.motionDetected();
 					break;
 				}
 			}

@@ -47,7 +47,6 @@ public class CamListener extends Thread {
 			switch(serverMonitor.getCurrentMode()){
 			case ServerMonitor.IDLE_MODE:
 				if(timeDifference > IDLE_MODE_TIME){
-					System.out.println(length);
 					serverMonitor.newPictureData(jpeg,currentTime,length);
 					oldTime = currentTime;
 				}

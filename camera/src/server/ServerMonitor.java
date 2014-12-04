@@ -87,11 +87,18 @@ public class ServerMonitor {
 			wait();
 		}
 		newData = false;
-		if (detectedMotion) {
-			detectedMotion = false;
-			return MOTION_DETECTED_ID;
+//		if (detectedMotion) {
+//			detectedMotion = false;
+//			System.out.println("motion detected");
+//			return MOTION_DETECTED_ID;
+//		}
+		System.out.println("bild package begin");
+		System.out.println(lastPictureData[0]);
+		for (int i = 0;i<4;i++){
+			System.out.println(lastPictureData[i]);
 		}
-		if(lastPictureData == null) System.out.println("hello");
+		System.out.println("-----------------");
+
 		return lastPictureData;
 	}
 
@@ -147,9 +154,12 @@ public class ServerMonitor {
 
 	private byte[] intToByte(int data) {
 		byte[] bytes = new byte[4];
-		for (int i = 0; i < 4; i++) {
-			bytes[i] = (byte) (data >>> (i * 8));
-		}
+		System.out.println(data);
+		int index = 0;
+		bytes[index++] = (byte) ((data & 0xff000000)>>24);
+		bytes[index++] = (byte) ((data & 0x00ff0000)>>16);
+		bytes[index++] = (byte) ((data & 0x0000ff00)>>8);
+		bytes[index++] = (byte) ((data & 0x000000ff));
 		return bytes;
 	}
 
