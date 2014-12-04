@@ -25,7 +25,7 @@ public class CamListener extends Thread {
 		AxisM3006V camera = new AxisM3006V();
 		byte[] jpeg;
 		byte[] currentTime;
-		byte[] oldTime = {0};
+		byte[] oldTime = {0,0,0,0};
 		long timeDifference;
 		int length;
 		camera.init();
