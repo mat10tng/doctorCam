@@ -13,4 +13,8 @@ public class ServerMonitor {
 	public ServerMonitor() {
 		// TODO Auto-generated constructor stub
 	}
+	public void setMode(int read) {
+		// TODO Auto-generated method stub
+		
+	}
 }

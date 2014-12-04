@@ -6,30 +6,29 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**Waits for a client to connect. When connected, generates a 
-ConnectionProcess and waits for it to close (iterative process).  */
 public class ServerHandler extends Thread{
 	private ServerSocket serverSocket;
-	public ServerHandler(int port) throws IOException {
+	private ServerSender serverSender;
+	private ServerReceiver serverReceiver;
+	public ServerHandler(int port ,ServerMonitor serverMonitor) throws IOException {
 		// TODO Auto-generated constructor stub
 		serverSocket = new ServerSocket(port);
-
+		serverSender = new ServerSender(serverMonitor);
+		serverReceiver = new ServerReceiver(serverMonitor);
+		serverSender.start();
+		serverReceiver.start();
 	}
 	public void run(){
 		while(!Thread.interrupted()){
 			try {
-				ServerMonitor serverMonitor = new ServerMonitor();
-				
 				Socket s = serverSocket.accept();
 				InputStream inStream = s.getInputStream();
-				OutputStream outStream = s.getOutputStream();
-				
-				ServerSender ss = new ServerSender(outStream,serverMonitor);
-				ServerReceiver sr = new ServerReceiver(inStream,serverMonitor);
-				
-				wait();
-				ss.interrupt();
-				sr.interrupt();
+				OutputStream outStream = s.getOutputStream();		
+				serverSender.setNewOutStream(outStream);
+				serverReceiver.setNewInStream(inStream);
+				while(!serverReceiver.endConnection()){
+					wait();
+				}
 				s.close();
 			} catch (IOException | InterruptedException e) {
 				// TODO Auto-generated catch block

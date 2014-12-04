@@ -1,5 +1,6 @@
 package server;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -7,15 +8,49 @@ import java.io.OutputStream;
  * then sends a picture or a Boolean-value to the client.
  */
 public class ServerSender extends Thread{
-	
+	private ServerMonitor serverMonitor;
+	private OutputStream outputStream;
+	private boolean newStream;
 
-	public ServerSender(OutputStream outStream, ServerMonitor serverMonitor) {
+	public ServerSender(ServerMonitor serverMonitor) {
 		// TODO Auto-generated constructor stub
+		this.serverMonitor = serverMonitor;
 		
+	}
+	public void run(){
+		while(!Thread.interrupted()){
+			while(!newStream)
+				try {
+					wait();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
+			
+			try {
+				int id = inStream.read();
+				switch(id){
+				case END_CONNECTION:
+					terminate = true;
+					notifyAll();
+					break;
+				case MODE_ACTION:
+					serverMonitor.setMode(inStream.read());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 	public void close() {
 		// TODO Auto-generated method stub
+	}
+
+	public void setNewOutStream(OutputStream outStream) {
+		this.outputStream = outStream;
 	}
 
 
