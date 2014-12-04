@@ -23,18 +23,9 @@ public class ServerSender extends Thread{
 				outputStream = serverMonitor.getOutputStream();
 				byte[] data=serverMonitor.getData();
 				int length=data.length;
-				if(length>10){
-					System.out.println("picturepackage");
-				}
+				System.out.println("asdasd");
 				outputStream.write(data,0,data.length);
 				outputStream.flush();
-				while(length>0){
-					Thread.sleep(1000);
-					length--;
-				}
-				System.out.println("afterwait");
-				//
-				//wait();
 			}
 			catch (IOException e) {
 				e.printStackTrace();

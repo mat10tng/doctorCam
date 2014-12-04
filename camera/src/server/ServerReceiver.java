@@ -13,7 +13,7 @@ public class ServerReceiver extends Thread{
 	private InputStream inStream;
 	private ServerMonitor serverMonitor;
 	private boolean terminate;
-	private static final int END_CONNECTION = 0;
+	private static final int END_CONNECTION = -1;
 	private static final int MODE_ACTION = 1;
 	
 	public ServerReceiver(ServerMonitor serverMonitor) throws IOException {
@@ -25,6 +25,7 @@ public class ServerReceiver extends Thread{
 			try {
 				inStream = serverMonitor.getInputStream();
 				int id = inStream.read();
+				System.out.println("we have somehing " + id);
 				switch(id){
 				case END_CONNECTION:
 					serverMonitor.receivedTerminateConnection();

@@ -23,7 +23,7 @@ public class Picture {
 		this.id  = id;
 		waitTime = 0;
 		byte[] byteTimestamp = new byte[8];
-		byte[] bytePicture = new byte[dataPackage.length - 9];
+		byte[] bytePicture = new byte[dataPackage.length - 8];
 		for (int i = 0; i < dataPackage.length; i++) {
 			if (i < 8) {
 				byteTimestamp[i] = dataPackage[i];

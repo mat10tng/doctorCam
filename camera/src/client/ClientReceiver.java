@@ -45,37 +45,32 @@ public class ClientReceiver extends Thread {
 				// wait for package to be read
 				byte[] packageType = new byte[1];
 				input.read(packageType);
-
-
-				
-
 				// proccess package to information.
 				// TODO CONSTANTS ADDED FROM SERVERSIDE
 				switch (packageType[0]) {
-				case (0 /* Picture Package */):
+				case ((byte)0 /* Picture Package */):
 					int length = 0;
 					byte[] lengthInBytes = new byte[4];
-					int bytesOfLength=input.read(lengthInBytes);
-					if(bytesOfLength!=4){
-						System.out.println("too odd length");
-					}
+					input.read(lengthInBytes);
+					System.out.println(lengthInBytes[0]);
 					length = byteToInt(lengthInBytes);
-					System.out.println(length);
+
 					byte[] dataPackage = new byte[length + 8];
-					int readlength=input.read(dataPackage);
-					if(readlength!=(length + 8)){
-						System.out.println("read too few ");
+					int readLength =  input.read(dataPackage);
+					while(readLength < length+8){
+						readLength+=input.read(dataPackage,readLength,(length+8-readLength));
 					}
-					//monitor.addPicture(new Picture(dataPackage, id));
+					monitor.addPicture(new Picture(dataPackage, id));
 					break;
-				case (1 /* Motion package */):
+				case ((byte)1 /* Motion package */):
 					//monitor.motionDetected();
 					break;
+				default:
+					throw new SocketException();
 				}
 			}
 		} catch (SocketException e) {
 			Thread.currentThread().interrupt();
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

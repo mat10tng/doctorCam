@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class ServerMonitor {
-	public static final int IDLE_MODE = 1;
-	public static final int MOVIE_MODE = 2;
+	public static final int IDLE_MODE = 0;
+	public static final int MOVIE_MODE = 1;
 	public static final int ID_SIZE = 1;
 	public static final int LEN_SIZE = 4;
 	public static final int TS_SIZE = 8;
@@ -63,9 +65,11 @@ public class ServerMonitor {
 		return socket.getOutputStream();
 	}
 
-	public synchronized void receivedTerminateConnection() {
+	public synchronized void receivedTerminateConnection() throws IOException {
 		// TODO Auto-generated method stub
+		System.out.println("hello hello");
 		endConnection = true;
+		socket.close();
 		notifyAll();
 	}
 
@@ -92,13 +96,12 @@ public class ServerMonitor {
 //			System.out.println("motion detected");
 //			return MOTION_DETECTED_ID;
 //		}
-		System.out.println("bild package begin");
-		System.out.println(lastPictureData[0]);
-		for (int i = 0;i<10;i++){
-			System.out.println("s:    "+lastPictureData[i]);
-		}
-		System.out.println("-----------------");
-
+//		System.out.println("bild package begin");
+//		System.out.println(lastPictureData[0]);
+//		for (int i = 0;i<10;i++){
+//			System.out.println("s:    "+lastPictureData[i]);
+//		}
+//		System.out.println("-----------------");
 		return lastPictureData;
 	}
 
@@ -128,19 +131,16 @@ public class ServerMonitor {
 
 	public synchronized void detectedMotion() {
 		detectedMotion = true;
-		newData = true;
 		notifyAll();
 	}
 
 	public synchronized void newPictureData(byte[] jpeg, byte[] currentTime,
 			int dataLength) {
 		// TODO Auto-generated method stub
-		if (!endConnection){
-			System.out.println("hi breakpoint");
-		}
 		newData = true;
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
+		byte[] our = intToByte(dataLength);
 		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
 		offset = setData(lastPictureData, intToByte(dataLength),LEN_SIZE, offset);
 		offset = setData(lastPictureData, currentTime,TS_SIZE, offset);
@@ -149,7 +149,7 @@ public class ServerMonitor {
 	}
 
 	private int setData(byte[] lastPictureData, byte[] data,int length, int offset) {
-		for (int i = offset; i < length; i++) {
+		for (int i = offset; i < length+offset; i++) {
 			lastPictureData[i] = data[i - offset];
 		}
 		return offset + length;
@@ -157,7 +157,6 @@ public class ServerMonitor {
 
 	private byte[] intToByte(int data) {
 		byte[] bytes = new byte[4];
-		System.out.println(data);
 		int index = 0;
 		bytes[index++] = (byte) ((data & 0xff000000)>>24);
 		bytes[index++] = (byte) ((data & 0x00ff0000)>>16);
