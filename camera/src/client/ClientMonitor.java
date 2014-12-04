@@ -9,18 +9,18 @@ public class ClientMonitor {
 	private HashMap<Integer,ArrayList<ClientSendData>> sendData;
 	private LinkedList<Picture> pictures;
 	private int cameraMode;
-	private boolean motionDetected;
+	private boolean forcedMode;
 	
 	
 	/**
 	 * Creates a ClientMonitor which handles the main traffic between network and GUI.
 	 */
 	public ClientMonitor() {
-		motionDetected=false;
+		forcedMode=false;
 		queue = new ArrayList<ConnectionData>();
 		sendData=new HashMap<Integer,ArrayList<ClientSendData>>();
 		pictures= new LinkedList<Picture>();
-		cameraMode=Constants.CameraMode.AUTO_MODE;
+		cameraMode=Constants.CameraMode.IDLE_MODE;
 	}
 	
 	
@@ -29,6 +29,9 @@ public class ClientMonitor {
 	 * or a connection is to be closed
 	 * */
 	public synchronized void addConnectionData(ConnectionData data){
+		if(data.getAction()==Constants.ConnectionActions.OPEN_CONNECTION){
+			sendData.put(data.getID(), new ArrayList<ClientSendData>());
+		}
 		queue.add(data);
 		notifyAll();
 	}
@@ -58,17 +61,36 @@ public class ClientMonitor {
 	 * TODO Switch to movie mode/ handle forced modes.
 	 */
 	public synchronized void motionDetected(){
-		motionDetected=true;
-		notifyAll();
+		if (cameraMode!=Constants.CameraMode.MOVIE_MODE && !forcedMode){
+			addSendData(Constants.CameraMode.MOVIE_MODE);
+			notifyAll();
+		}
 	}
-	
+	private void addSendData(int mode){
+		byte[] modeData=new byte[2];
+		switch(mode){
+		case(Constants.CameraMode.IDLE_MODE):
+			modeData=Constants.CameraMode.getIdleBytes();
+			break;
+		case(Constants.CameraMode.MOVIE_MODE):
+			modeData=Constants.CameraMode.getMovieBytes();
+			break;
+		default:
+			System.out.println("wrong in assSendData: "+this.toString());
+			System.exit(1);
+		}
+		ClientSendData changeModeData=new ClientSendData(Constants.ClientSendTypes.SENDDATA,modeData);
+		for (ArrayList<ClientSendData> queue:sendData.values()){
+			queue.add(changeModeData);
+		}	
+	}
 	/**
 	 * Called by ClientSender thread to get next package to send.
 	 * Blocking until ready to send package
 	 * 
 	 * @return ClientSendData - Data to be sent to server
 	 */
-	public synchronized ClientSendData writeToOutput(int id) throws InterruptedException {
+	public synchronized ClientSendData getOutgoingData(int id) throws InterruptedException {
 		while(sendData.get(id).isEmpty()){
 			wait();
 		}
@@ -79,24 +101,24 @@ public class ClientMonitor {
 	 * @param mode: a constant listed in Constants.CameraMode
 	 */
 	public synchronized void setCameraMode(int mode){
-		cameraMode=mode;
-		notifyAll();
-	}
-	public synchronized void addNewConnection(int ID){
-		sendData.put(ID, new ArrayList<ClientSendData>());
+		if (mode != Constants.CameraMode.AUTO_MODE) {
+			cameraMode=mode;
+			forcedMode = true;
+			addSendData(mode);
+		} else {
+			cameraMode=Constants.CameraMode.IDLE_MODE;
+			forcedMode = false;
+			addSendData(Constants.CameraMode.IDLE_MODE);
+		}
 		notifyAll();
 	}
 	public synchronized void removeConnection(int ID){
 		sendData.remove(ID);
-		notifyAll();
 	}
 	public synchronized Picture getPicture() throws InterruptedException{
 		while(pictures.isEmpty()){
 			wait();
 		}
 		return pictures.pop();
-	}
-	private synchronized boolean connectionExists(int ID){
-		return sendData.keySet().contains(ID);
 	}
 }

@@ -14,7 +14,7 @@ import GUIView.ViewWindow;
  */
 public class ProcessHandler extends Thread {
 
-	private ClientMonitor MainMonitor;
+	private ClientMonitor clientMonitor;
 	private PictureMonitor picMonitor;
 	private HashMap<Integer, Socket> clientSockets;
 	private HashMap<Integer, ViewHandler> views;
@@ -30,7 +30,7 @@ public class ProcessHandler extends Thread {
 	 *            : Monitor used to create ViewHandler threads.
 	 */
 	public ProcessHandler(ClientMonitor MainMonitor, PictureMonitor picMonitor) {
-		this.MainMonitor = MainMonitor;
+		this.clientMonitor = MainMonitor;
 		this.picMonitor = picMonitor;
 		clientSockets = new HashMap<Integer, Socket>();
 		views = new HashMap<Integer, ViewHandler>();
@@ -46,8 +46,7 @@ public class ProcessHandler extends Thread {
 	public void run() {
 		try {
 			while (!isInterrupted()) {
-				cdata = MainMonitor.getConnectionData();
-				Thread.currentThread().interrupt();
+				cdata = clientMonitor.getConnectionData();
 				int id = cdata.getID();
 				switch (cdata.getAction()) {
 				case (Constants.ConnectionActions.OPEN_CONNECTION):
@@ -55,14 +54,15 @@ public class ProcessHandler extends Thread {
 							"Camera: " + id), id));
 					clientSockets.put(id,
 							new Socket(cdata.getIP(), cdata.getPort()));
-					new ClientReceiver(MainMonitor, clientSockets.get(id)
+					new ClientReceiver(clientMonitor, clientSockets.get(id)
 							.getInputStream(), id);
-					new ClientSender(MainMonitor, clientSockets.get(id)
+					new ClientSender(clientMonitor, clientSockets.get(id)
 							.getOutputStream(), id);
 					break;
 				case (Constants.ConnectionActions.CLOSE_CONNECTION):
-					views.get(id).interrupt();
 					clientSockets.get(id).close();
+					views.get(id).interrupt();
+					clientMonitor.removeConnection(id);
 					break;
 				default:
 					System.out.println("You should not be here!");

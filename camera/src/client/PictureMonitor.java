@@ -5,7 +5,8 @@ import java.util.LinkedList;
 
 /**
  * @author Hans-Johan
- * 
+ * @edit Shan
+ *
  */
 public class PictureMonitor {
 	private HashMap<Integer, LinkedList<Picture>> pictures;
@@ -13,6 +14,10 @@ public class PictureMonitor {
 	private int viewMode;
 	private long latestTime;
 
+	/**
+	 * Creates a picture monitor which handles which view windows should have a
+	 * certain picture. Also handles if sync mode or not
+	 */
 	public PictureMonitor() {
 		pictures = new HashMap<Integer, LinkedList<Picture>>();
 		forcedMode = false;
@@ -85,19 +90,21 @@ public class PictureMonitor {
 
 	/**
 	 * Adds a picture to a specific Picturequeue. The pictures will then be
-	 * retrievable by the corresponding View.
+	 * retrievable by the corresponding View. Notifies all when a picture has
+	 * arrived
 	 * 
 	 * @param picture
 	 *            the Picture to add
 	 */
 	public synchronized void addPicture(Picture picture) {
 		if (pictures.containsKey(picture.getId())) {
-			if(latestTime != 0 && viewMode == Constants.ViewMode.SYNC_MODE){
+			if (latestTime != 0 && viewMode == Constants.ViewMode.SYNC_MODE) {
 				picture.setWaitTime(latestTime);
 			}
 			latestTime = picture.getTimeStamp();
-			picture.currentViewMode=viewMode;
+			picture.currentViewMode = viewMode;
 			pictures.get(picture.getId()).add(picture);
+			notifyAll();
 		}
 	}
 }

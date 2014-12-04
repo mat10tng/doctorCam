@@ -8,7 +8,7 @@ import java.io.OutputStream;
  * 
  */
 public class ClientSender extends Thread {
-	private ClientMonitor monitor;
+	private ClientMonitor clientMonitor;
 	private OutputStream output;
 	private int id;
 
@@ -22,8 +22,8 @@ public class ClientSender extends Thread {
 	 * @param id
 	 *            : Which network this thread belongs to (ergo camera)
 	 */
-	public ClientSender(ClientMonitor monitor, OutputStream outputStream, int id) {
-		this.monitor = monitor;
+	public ClientSender(ClientMonitor clientMonitor, OutputStream outputStream, int id) {
+		this.clientMonitor = clientMonitor;
 		this.output = outputStream;
 		this.id = id;
 	}
@@ -38,7 +38,7 @@ public class ClientSender extends Thread {
 		try {
 			while (!isInterrupted()) {
 				ClientSendData packagedData;
-				packagedData = monitor.writeToOutput(id);
+				packagedData = clientMonitor.getOutgoingData(id);
 				if (packagedData.isCloseConnection()) {
 					throw new InterruptedException();
 				} else {

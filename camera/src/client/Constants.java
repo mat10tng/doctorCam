@@ -16,9 +16,24 @@ public class Constants {
 			default:
 				return "undefined camera mode";
 			}
-			}
 		}
-
+		private static byte[] getBytes(int mode){
+			byte[] dataPackage=new byte[2];
+			dataPackage[0]=1;
+			dataPackage[1]=(byte)mode;
+			return dataPackage;
+		}
+		public static byte[] getMovieBytes(){
+			return getBytes(MOVIE_MODE);
+		}
+		public static byte[] getIdleBytes(){
+			return getBytes(IDLE_MODE);
+		}
+	}
+	public static class ClientSendTypes{
+		public static final int INTERRUPT=0;
+		public static final int SENDDATA=1;
+	}
 	public static class ViewMode {
 		public static final int SYNC_MODE = 0;
 		public static final int AUTO_MODE = 1;
