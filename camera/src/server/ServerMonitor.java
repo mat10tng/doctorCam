@@ -110,12 +110,7 @@ public class ServerMonitor {
 		return lastPictureData;
 	}
 
-	
-	
-	
-	
-	
-	
+	// receiver get new order 
 	
 	public synchronized void setMode(int read) {
 		switch(read){
@@ -130,6 +125,11 @@ public class ServerMonitor {
 		}
 		notifyAll();
 	}
+	
+	
+	
+	
+	
 	public int getCurrentMode(){
 		return currentMode;
 	}
