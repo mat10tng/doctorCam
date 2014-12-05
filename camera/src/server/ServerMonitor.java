@@ -29,12 +29,12 @@ public class ServerMonitor {
 	private boolean endConnection;
 
 	public ServerMonitor() {
-		setMode(IDLE_MODE);
+		setMode(AUTO_MODE);
 		newPictureData = false;
 		newInputStream = false;
 		newInputStream = false;
 		endConnection = false;
-		detectedMotion = true;
+		detectedMotion = false;
 	}
 
 	// Connection relate stuff
