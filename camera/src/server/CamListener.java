@@ -44,24 +44,24 @@ public class CamListener extends Thread {
 			currentTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
 			length = camera.getJPEG(jpeg, 0);
 			camera.getTime(currentTime, 0);
-			timeDifference  = timeDiff(currentTime,oldTime);
-
+			
 			if (camera.motionDetected() 
 					&& serverMonitor.getCurrentMode() == ServerMonitor.AUTO_MODE) {
 				serverMonitor.detectedMotion();
 				serverMonitor.setMode(ServerMonitor.MOVIE_MODE);
 			}
+			
 			switch(serverMonitor.getCurrentMode()){
 				case ServerMonitor.MOVIE_MODE:
 					serverMonitor.newPictureData(jpeg,currentTime,length);
 					break;
 				default:
+					timeDifference  = timeDiff(currentTime,oldTime);
 					if(timeDifference > IDLE_MODE_TIME){
 						serverMonitor.newPictureData(jpeg,currentTime,length);
 						oldTime = currentTime;
 					}
 					break;
-
 			}
 		}
 	}
