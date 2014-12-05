@@ -44,7 +44,6 @@ public class CamListener extends Thread {
 		while(!Thread.interrupted()){
 			length = camera.getJPEG(jpeg, 0);
 			camera.getTime(currentTime, 0);
-			serverMonitor.updateJpeg(jpeg,length);
 			if (camera.motionDetected() 
 					&& serverMonitor.getCurrentMode() == ServerMonitor.AUTO_MODE) {
 				serverMonitor.detectedMotion();

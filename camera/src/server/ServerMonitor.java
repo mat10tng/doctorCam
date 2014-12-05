@@ -52,16 +52,13 @@ public class ServerMonitor {
 	public synchronized void updatePictureData(byte[] jpeg, byte[] currentTime,
 			int dataLength) throws InterruptedException {
 		// TODO Auto-generated method stub
-		while(!streamAlive && !streamHTTP) {
-			wait();
-		}
-		lastJPEG = jpeg;
+		lastJPEG = updateJpeg(jpeg,dataLength);
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
 		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
 		offset = setData(lastPictureData, intToByte(dataLength),LEN_SIZE, offset);
 		offset = setData(lastPictureData, currentTime,TS_SIZE, offset);
-		offset = setData(lastPictureData, jpeg,dataLength, offset);
+		offset = setData(lastPictureData, lastJPEG,dataLength, offset);
 	}
 	public synchronized void notifyNewPicture(){
 		newPictureData = true;
@@ -169,12 +166,12 @@ public class ServerMonitor {
 		return bytes;
 	}
 
-	public synchronized void updateJpeg(byte[] jpeg, int length){
+	private synchronized byte[] updateJpeg(byte[] jpeg, int length){
 		lastJPEG = new byte[length];
 		setData(this.lastJPEG,jpeg,length,0);
 		aliveJPEG = true;
-		streamHTTP = true;
 		notifyAll();
+		return jpeg;
 	}
 	public synchronized byte[] getLastJPEG() throws InterruptedException{
 		while (!aliveJPEG){
@@ -182,8 +179,6 @@ public class ServerMonitor {
 		}
 		return lastJPEG;
 	}
-	public synchronized void closeHTTP(){
-		streamHTTP = false;
-	}
+
 
 }
