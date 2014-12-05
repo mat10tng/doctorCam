@@ -44,7 +44,7 @@ public class CamListener extends Thread {
 		while(!Thread.interrupted()){
 			length = camera.getJPEG(jpeg, 0);
 			camera.getTime(currentTime, 0);
-			serverMonitor.updateJpeg(jpeg);
+			serverMonitor.updateJpeg(jpeg,length);
 			if (camera.motionDetected() 
 					&& serverMonitor.getCurrentMode() == ServerMonitor.AUTO_MODE) {
 				serverMonitor.detectedMotion();
@@ -54,11 +54,13 @@ public class CamListener extends Thread {
 			switch(serverMonitor.getCurrentMode()){
 				case ServerMonitor.MOVIE_MODE:
 					oldTime = updatePictureData(jpeg,currentTime,length);
+					serverMonitor.notifyNewPicture();
 					break;
 				default:
 					timeDifference = byteToLong(currentTime) - oldTime;
 					if(timeDifference > IDLE_MODE_TIME ){
 						oldTime = updatePictureData(jpeg,currentTime,length);
+						serverMonitor.notifyNewPicture();
 					}
 					break;
 			}
@@ -92,7 +94,7 @@ public class CamListener extends Thread {
 	}
 	private long updatePictureData(byte[] jpeg, byte[] currentTime, int length){
 		try {
-			serverMonitor.newPictureData(jpeg,currentTime,length);
+			serverMonitor.updatePictureData(jpeg,currentTime,length);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

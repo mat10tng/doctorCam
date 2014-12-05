@@ -49,20 +49,22 @@ public class ServerMonitor {
 		notifyAll();
 	}
 	
-	public synchronized void newPictureData(byte[] jpeg, byte[] currentTime,
+	public synchronized void updatePictureData(byte[] jpeg, byte[] currentTime,
 			int dataLength) throws InterruptedException {
 		// TODO Auto-generated method stub
 		while(!streamAlive && !streamHTTP) {
 			wait();
 		}
 		lastJPEG = jpeg;
-		newPictureData = true;
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
 		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
 		offset = setData(lastPictureData, intToByte(dataLength),LEN_SIZE, offset);
 		offset = setData(lastPictureData, currentTime,TS_SIZE, offset);
 		offset = setData(lastPictureData, jpeg,dataLength, offset);
+	}
+	public synchronized void notifyNewPicture(){
+		newPictureData = true;
 		notifyAll();
 	}
 
@@ -72,7 +74,6 @@ public class ServerMonitor {
 		this.socket = s;		
 		streamAlive = true;
 		endConnection = false;
-		setMode(MOVIE_MODE);
 		notifyAll();
 	}
 	
@@ -144,6 +145,8 @@ public class ServerMonitor {
 			System.out.println("We got movie night");
 			break;
 		}
+		notifyNewPicture();
+
 		notifyAll();
 	}
 
@@ -166,8 +169,8 @@ public class ServerMonitor {
 		return bytes;
 	}
 
-	public synchronized void updateJpeg(byte[] jpeg){
-		this.lastJPEG = jpeg;
+	public synchronized void updateJpeg(byte[] jpeg, int length){
+		setData(this.lastJPEG,jpeg,length,0);
 		aliveJPEG = true;
 		notifyAll();
 	}
