@@ -20,11 +20,15 @@ public class ServerMonitor {
 								// as if motion is detected by theCamera H.W.
 	private byte[] lastPictureData; // The most recent pictureData from Camera H.W.
 	private byte[] lastJPEG;
+	
+	private boolean aliveJPEG;
 	private boolean newPictureData;
 	private boolean detectedMotion;
 	private boolean streamAlive;
 	private boolean endConnection;
 
+	
+	private boolean streamHTTP;
 	public ServerMonitor() {
 		
 		currentMode = AUTO_MODE;
@@ -32,6 +36,7 @@ public class ServerMonitor {
 		detectedMotion = false;
 		streamAlive = false;
 		endConnection = false;
+		streamHTTP  = false;
 	}
 
 	// CamListener only 
@@ -47,7 +52,7 @@ public class ServerMonitor {
 	public synchronized void newPictureData(byte[] jpeg, byte[] currentTime,
 			int dataLength) throws InterruptedException {
 		// TODO Auto-generated method stub
-		while(!streamAlive) {
+		while(!streamAlive && !streamHTTP) {
 			wait();
 		}
 		lastJPEG = jpeg;
@@ -64,13 +69,10 @@ public class ServerMonitor {
 	//ServerHandler only
 	
 	public synchronized void openNewConnection(Socket s) {
-		this.socket = s;
-		currentMode = AUTO_MODE;
-		newPictureData = false;
-		detectedMotion = false;
-		
+		this.socket = s;		
 		streamAlive = true;
 		endConnection = false;
+		setMode(MOVIE_MODE);
 		notifyAll();
 	}
 	
@@ -87,7 +89,9 @@ public class ServerMonitor {
 	
 	public synchronized InputStream getInputStream() throws IOException,
 			InterruptedException {
-		while (!streamAlive) wait();
+		while (!streamAlive) {
+			wait();
+		}
 		System.out.println("i should not be here inputstream after connection end");
 		return socket.getInputStream();
 	}
@@ -101,7 +105,10 @@ public class ServerMonitor {
 	//ServerSender only
 	public synchronized OutputStream getOutputStream() throws IOException,
 			InterruptedException {
-		while (!streamAlive) wait();
+		while (!streamAlive){
+			wait();
+
+		}
 		return socket.getOutputStream();
 	}
 
@@ -158,9 +165,14 @@ public class ServerMonitor {
 
 		return bytes;
 	}
-	
+
+	public synchronized void updateJpeg(byte[] jpeg){
+		this.lastJPEG = jpeg;
+		aliveJPEG = true;
+		notifyAll();
+	}
 	public synchronized byte[] getLastJPEG() throws InterruptedException{
-		while (!newPictureData){
+		while (!aliveJPEG){
 			wait();
 		}
 		return lastJPEG;
