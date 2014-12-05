@@ -9,6 +9,11 @@ import client.Constants;
 
 public class CameraPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9065614995531898669L;
+
 	public CameraPanel(ClientMonitor monitor) {
 		super(new GridLayout(1, 2));
 		this.add(new CameraButton("cam 1", Constants.DebugIps.IP1,

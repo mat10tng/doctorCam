@@ -12,6 +12,10 @@ import client.ConnectionData;
 import client.Constants;
 
 public class CameraButton extends JButton implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9116970192513641279L;
 	private ClientMonitor clientMonitor;
 	private String ip;
 	private int port;

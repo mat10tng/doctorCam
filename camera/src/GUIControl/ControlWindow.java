@@ -1,6 +1,5 @@
 package GUIControl;
 
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
@@ -10,6 +9,11 @@ import javax.swing.UIManager;
 import client.*;
 
 public class ControlWindow extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5227371010759534852L;
 
 	public ControlWindow(ClientMonitor clientMonitor,
 			PictureMonitor pictureMonitor) {

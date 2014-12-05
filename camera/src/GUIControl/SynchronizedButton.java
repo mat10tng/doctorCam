@@ -5,11 +5,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JRadioButton;
 
-import client.ClientMonitor;
 import client.Constants;
 import client.PictureMonitor;
 
 public class SynchronizedButton extends JRadioButton implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4293168026024657874L;
 	private PictureMonitor pictureMonitor;
 	public SynchronizedButton(PictureMonitor pictureMonitor) {
 		super("Synchronize");

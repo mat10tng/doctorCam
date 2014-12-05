@@ -11,6 +11,15 @@ import client.PictureMonitor;
 
 public class ModePanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3410145907763052010L;
+
+	/**
+	 * @param clientMonitor
+	 * @param pictureMonitor
+	 */
 	public ModePanel(ClientMonitor clientMonitor,PictureMonitor pictureMonitor) {
 		super(new BorderLayout());
 		//make left button group

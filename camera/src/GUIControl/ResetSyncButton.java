@@ -9,6 +9,10 @@ import client.Constants;
 import client.PictureMonitor;
 
 public class ResetSyncButton extends JButton implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6577952940607441147L;
 	private PictureMonitor pictureMonitor;
 
 	public ResetSyncButton(PictureMonitor pictureMonitor) {
