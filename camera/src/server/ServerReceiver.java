@@ -32,7 +32,6 @@ public class ServerReceiver extends Thread{
 					serverMonitor.receivedTerminateConnection();
 					break;
 				case MODE_ACTION:
-					serverMonitor.setMode(ServerMonitor.MOVIE_MODE);
 					serverMonitor.setMode(inStream.read());
 					break;
 				}

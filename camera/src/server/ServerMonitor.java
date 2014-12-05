@@ -86,7 +86,7 @@ public class ServerMonitor {
 	
 	public synchronized InputStream getInputStream() throws IOException,
 			InterruptedException {
-		while (!streamAlive) {
+		while (!streamAlive || socket == null) {
 			wait();
 		}
 		System.out.println("i should not be here inputstream after connection end");
@@ -105,7 +105,6 @@ public class ServerMonitor {
 			InterruptedException {
 		while (!streamAlive){
 			wait();
-
 		}
 		return socket.getOutputStream();
 	}
