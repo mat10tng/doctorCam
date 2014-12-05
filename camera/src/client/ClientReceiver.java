@@ -52,7 +52,6 @@ public class ClientReceiver extends Thread {
 					int length = 0;
 					byte[] lengthInBytes = new byte[4];
 					input.read(lengthInBytes);
-					System.out.println(lengthInBytes[0]);
 					length = byteToInt(lengthInBytes);
 
 					byte[] dataPackage = new byte[length + 8];
@@ -63,7 +62,7 @@ public class ClientReceiver extends Thread {
 					monitor.addPicture(new Picture(dataPackage, id));
 					break;
 				case ((byte)1 /* Motion package */):
-					//monitor.motionDetected();
+					monitor.motionDetected();
 					break;
 				default:
 					throw new SocketException();
