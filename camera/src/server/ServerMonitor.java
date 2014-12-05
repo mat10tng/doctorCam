@@ -37,37 +37,38 @@ public class ServerMonitor {
 		detectedMotion = false;
 	}
 
-	// Connection relate stuff
+	// CamListener only 
+	public synchronized int getCurrentMode() {
+		return currentMode;
+	}
+
+	public synchronized void detectedMotion() {
+		detectedMotion = true;
+		notifyAll();
+	}
+	
+	public synchronized void newPictureData(byte[] jpeg, byte[] currentTime,
+			int dataLength) {
+		// TODO Auto-generated method stub
+		newPictureData = true;
+		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
+				+ dataLength];
+		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
+		offset = setData(lastPictureData, intToByte(dataLength),LEN_SIZE, offset);
+		offset = setData(lastPictureData, currentTime,TS_SIZE, offset);
+		offset = setData(lastPictureData, jpeg,dataLength, offset);
+		notifyAll();
+	}
+
+	//ServerHandler only
+	
 	public synchronized void openNewConnection(Socket s) {
 		this.socket = s;
 		newInputStream = true;
 		newOutputStream = true;
 		notifyAll();
 	}
-
-	public synchronized InputStream getInputStream() throws IOException,
-			InterruptedException {
-		while (!newInputStream) {
-			wait();
-		}
-		return socket.getInputStream();
-	}
-
-	public synchronized OutputStream getOutputStream() throws IOException,
-			InterruptedException {
-		while (!newOutputStream) {
-			wait();
-		}
-		return socket.getOutputStream();
-	}
-
-	public synchronized void receivedTerminateConnection() throws IOException {
-		System.out.println("hello hello");
-		endConnection = true;
-		socket.close();
-		notifyAll();
-	}
-
+	
 	public synchronized void endConnection() throws InterruptedException {
 		while (!endConnection) {
 			wait();
@@ -78,6 +79,33 @@ public class ServerMonitor {
 		notifyAll();
 	}
 
+	
+	//ServerRecevier only 
+	
+	public synchronized InputStream getInputStream() throws IOException,
+			InterruptedException {
+		while (!newInputStream) {
+			wait();
+		}
+		return socket.getInputStream();
+	}
+	
+	public synchronized void receivedTerminateConnection() throws IOException {
+		System.out.println("hello hello");
+		endConnection = true;
+		socket.close();
+		notifyAll();
+	}
+
+	//ServerSender only
+	public synchronized OutputStream getOutputStream() throws IOException,
+			InterruptedException {
+		while (!newOutputStream) {
+			wait();
+		}
+		return socket.getOutputStream();
+	}
+
 	public synchronized byte[] getPictureData() throws InterruptedException {
 		while (!newPictureData) {
 			wait();
@@ -86,11 +114,15 @@ public class ServerMonitor {
 
 		return lastPictureData;
 	}
+
 	public synchronized boolean newMotionData() throws InterruptedException {
+		boolean temp = detectedMotion;
 		detectedMotion = false;
-		return detectedMotion;
+		return temp;
 	}
 
+	
+	// others share
 	public synchronized void setMode(int read) {
 		switch (read) {
 		case AUTO_MODE:
@@ -107,29 +139,6 @@ public class ServerMonitor {
 			System.out.println("We got movie night");
 			break;
 		}
-		notifyAll();
-	}
-
-	public synchronized int getCurrentMode() {
-		return currentMode;
-	}
-
-
-	public synchronized void detectedMotion() {
-		detectedMotion = true;
-		notifyAll();
-	}
-
-	public synchronized void newPictureData(byte[] jpeg, byte[] currentTime,
-			int dataLength) {
-		// TODO Auto-generated method stub
-		newPictureData = true;
-		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
-				+ dataLength];
-		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
-		offset = setData(lastPictureData, intToByte(dataLength),LEN_SIZE, offset);
-		offset = setData(lastPictureData, currentTime,TS_SIZE, offset);
-		offset = setData(lastPictureData, jpeg,dataLength, offset);
 		notifyAll();
 	}
 
