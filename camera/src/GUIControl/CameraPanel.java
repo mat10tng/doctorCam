@@ -1,11 +1,13 @@
 package GUIControl;
 
 import java.awt.GridLayout;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
 import client.ClientMonitor;
 import client.Constants;
+import client.IpInformation;
 
 public class CameraPanel extends JPanel {
 
@@ -16,10 +18,9 @@ public class CameraPanel extends JPanel {
 
 	public CameraPanel(ClientMonitor monitor) {
 		super(new GridLayout(1, 2));
-		this.add(new CameraButton("cam 1", Constants.DebugIps.IP1,
-				Constants.DebugIps.PORT1, Constants.DebugIps.ID1, monitor));
-		this.add(new CameraButton("cam 2", Constants.DebugIps.IP2,
-				Constants.DebugIps.PORT2, Constants.DebugIps.ID2, monitor));
+		HashMap<Integer,IpInformation> ipinformation = new HashMap<Integer,IpInformation>();
+		this.add(new AddCameraButton(ipinformation, monitor));
+		this.add(new RemoveCameraButton(ipinformation, monitor));
 	}
 
 }
