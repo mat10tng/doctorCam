@@ -20,7 +20,7 @@ public class ClientMonitor {
 		queue = new LinkedList<ConnectionData>();
 		sendData=new HashMap<Integer,LinkedList<Byte[]>>();
 		pictures= new LinkedList<Picture>();
-		cameraMode=Constants.CameraMode.IDLE_MODE;
+		cameraMode=Constants.CameraMode.AUTO_MODE;
 		destroyed = false;
 	}
 	
@@ -78,8 +78,9 @@ public class ClientMonitor {
 			break;
 		case(Constants.CameraMode.AUTO_MODE):
 			modeData = Constants.CameraMode.getAutoBytes();
+			break;
 		default:
-			System.out.println("wrong in assSendData: "+this.toString());
+			System.out.println("wrong in addSendData: "+this.toString());
 			System.exit(1);
 		}
 		for (LinkedList<Byte[]> queue:sendData.values()){
