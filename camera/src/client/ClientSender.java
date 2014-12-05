@@ -44,6 +44,7 @@ public class ClientSender extends Thread {
 				for(int i=0;i<packagedData.length;i++){
 					primitiveBytePackage[i]=packagedData[i].byteValue();
 				}
+				System.out.println("Sending package "+ primitiveBytePackage[0] + " " + primitiveBytePackage[1]);
 				output.write(primitiveBytePackage);
 				output.flush();
 			}

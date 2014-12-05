@@ -48,51 +48,55 @@ public class ProcessHandler extends Thread {
 	public void run() {
 		try {
 			while (!isInterrupted()) {
-				cdata = clientMonitor.getConnectionData();
-				if(cdata == null){
-					closeAllConnections();
-				}
-				int id = cdata.getID();
-				switch (cdata.getAction()) {
-				case (Constants.ConnectionActions.OPEN_CONNECTION):
-					views.put(id, new ViewHandler(picMonitor, new ViewWindow(
-							"Camera: " + id), id));
-					clientSockets.put(id,
-							new Socket(cdata.getIP(), cdata.getPort()));
-					ClientReceiver receiver = new ClientReceiver(clientMonitor,
-							clientSockets.get(id).getInputStream(), id);
-					senders.put(id, new ClientSender(clientMonitor,
-							clientSockets.get(id).getOutputStream(), id));
-					picMonitor.registerPictureSource(id);
-					views.get(id).start();
-					senders.get(id).start();
-					receiver.start();
-					break;
-				case (Constants.ConnectionActions.CLOSE_CONNECTION):
-					clientSockets.get(id).close();
-					senders.get(id).interrupt();
+					cdata = clientMonitor.getConnectionData();
+					if (cdata == null) {
+						closeAllConnections();
+					}
+					int id = cdata.getID();
+					try {
+					switch (cdata.getAction()) {
+					case (Constants.ConnectionActions.OPEN_CONNECTION):
+						views.put(id, new ViewHandler(picMonitor,
+								new ViewWindow("Camera: " + id), id));
+						clientSockets.put(id,
+								new Socket(cdata.getIP(), cdata.getPort()));
+						ClientReceiver receiver = new ClientReceiver(
+								clientMonitor, clientSockets.get(id)
+										.getInputStream(), id);
+						senders.put(id, new ClientSender(clientMonitor,
+								clientSockets.get(id).getOutputStream(), id));
+						picMonitor.registerPictureSource(id);
+						views.get(id).start();
+						senders.get(id).start();
+						receiver.start();
+						break;
+					case (Constants.ConnectionActions.CLOSE_CONNECTION):
+						clientSockets.get(id).close();
+						senders.get(id).interrupt();
+						views.get(id).interrupt();
+						clientMonitor.removeConnection(id);
+						picMonitor.removePictureSource(id);
+						senders.remove(id);
+						views.remove(id);
+						break;
+					default:
+						System.out.println("You should not be here!");
+						System.exit(1);
+						break;
+					}
+				} catch (UnknownHostException e) {
+					System.out.println("Failed to connect to Host");
 					views.get(id).interrupt();
-					clientMonitor.removeConnection(id);
-					picMonitor.removePictureSource(id);
-					senders.remove(id);
-					views.remove(id);
-					break;
-				default:
-					System.out.println("You should not be here!");
-					System.exit(1);
-					break;
-				}
+					e.printStackTrace();
+				} 
 
 			}
 		} catch (InterruptedException e1) {
 			System.out.println("interrupted thread, errorMessege"
 					+ e1.getMessage());
 			Thread.currentThread().interrupt();
-		} catch (UnknownHostException e) {
-			System.out.println("Failed to connect to Host");
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("something went wrong");
 			e.printStackTrace();
 		}
 
@@ -100,13 +104,14 @@ public class ProcessHandler extends Thread {
 
 	/**
 	 * Closes all connections
+	 * 
 	 * @throws IOException
 	 */
 	private void closeAllConnections() throws IOException {
-		for(int id: clientSockets.keySet()){
+		for (int id : clientSockets.keySet()) {
 			clientSockets.get(id).close();
 		}
 		clientMonitor.destroyed();
-		
+
 	}
 }

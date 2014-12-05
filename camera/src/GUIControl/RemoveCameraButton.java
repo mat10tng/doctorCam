@@ -43,6 +43,7 @@ public class RemoveCameraButton extends JButton implements ActionListener {
 		}else{
 		   IpInformation removeip = (IpInformation) JOptionPane.showInputDialog(null, "Select Camera to kill", "Active Cameras",
 		            JOptionPane.QUESTION_MESSAGE, null, ipinformation.values().toArray(), ipinformation.get(0));
+		   ipinformation.remove(removeip.getId());
 		   clientMonitor.addConnectionData(new ConnectionData(removeip,Constants.ConnectionActions.CLOSE_CONNECTION));
 		      }
 		}
