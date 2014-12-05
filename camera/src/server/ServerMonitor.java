@@ -18,8 +18,8 @@ public class ServerMonitor {
 	private Socket socket;
 	private int currentMode; // Depends on clientMode as well
 								// as if motion is detected by theCamera H.W.
-	private byte[] lastPictureData; // The most recent picture from Camera H.W.
-	
+	private byte[] lastPictureData; // The most recent pictureData from Camera H.W.
+	private byte[] lastJPEG;
 	private boolean newPictureData;
 	private boolean detectedMotion;
 	private boolean streamAlive;
@@ -45,8 +45,12 @@ public class ServerMonitor {
 	}
 	
 	public synchronized void newPictureData(byte[] jpeg, byte[] currentTime,
-			int dataLength) {
+			int dataLength) throws InterruptedException {
 		// TODO Auto-generated method stub
+		while(!streamAlive) {
+			wait();
+		}
+		lastJPEG = jpeg;
 		newPictureData = true;
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
@@ -63,7 +67,6 @@ public class ServerMonitor {
 		this.socket = s;
 		streamAlive = true;
 		endConnection = false;
-		System.out.println("new connection etablished");
 		notifyAll();
 	}
 	
@@ -150,6 +153,10 @@ public class ServerMonitor {
 		
 
 		return bytes;
+	}
+	
+	public synchronized byte[] getLastJPEG(){
+		return lastJPEG;
 	}
 
 }

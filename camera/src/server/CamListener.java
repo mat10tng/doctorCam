@@ -53,14 +53,12 @@ public class CamListener extends Thread {
 			
 			switch(serverMonitor.getCurrentMode()){
 				case ServerMonitor.MOVIE_MODE:
-					serverMonitor.newPictureData(jpeg,currentTime,length);
-					oldTime = byteToLong(currentTime);
+					oldTime = updatePictureData(jpeg,currentTime,length);
 					break;
 				default:
 					timeDifference = byteToLong(currentTime) - oldTime;
 					if(timeDifference > IDLE_MODE_TIME ){
-						serverMonitor.newPictureData(jpeg,currentTime,length);
-						oldTime = byteToLong(currentTime);
+						oldTime = updatePictureData(jpeg,currentTime,length);
 					}
 					break;
 			}
@@ -91,5 +89,14 @@ public class CamListener extends Thread {
 			time+=addTime;
 		}
 		return time;
+	}
+	private long updatePictureData(byte[] jpeg, byte[] currentTime, int length){
+		try {
+			serverMonitor.newPictureData(jpeg,currentTime,length);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return  byteToLong(currentTime);
 	}
 }
