@@ -32,6 +32,7 @@ public class ClientMonitor {
 	public synchronized void addConnectionData(ConnectionData data){
 		if(data != null && data.getAction()==Constants.ConnectionActions.OPEN_CONNECTION){
 			sendData.put(data.getID(), new LinkedList<Byte[]>());
+			addModeDataToConnection(data.getID(),cameraMode);
 		}
 		queue.add(data);
 		notifyAll();
@@ -63,11 +64,11 @@ public class ClientMonitor {
 	 */
 	public synchronized void motionDetected(){
 		if (cameraMode!=Constants.CameraMode.MOVIE_MODE && !forcedMode){
-			addSendData(Constants.CameraMode.MOVIE_MODE);
+			addModeDataToAllConnections(Constants.CameraMode.MOVIE_MODE);
 			notifyAll();
 		}
 	}
-	private void addSendData(int mode){
+	private void addModeDataToAllConnections(int mode){
 		Byte[] modeData=new Byte[2];
 		switch(mode){
 		case(Constants.CameraMode.IDLE_MODE):
@@ -86,6 +87,10 @@ public class ClientMonitor {
 		for (LinkedList<Byte[]> queue:sendData.values()){
 			queue.add(modeData);
 		}	
+	}
+	private void addModeDataToConnection( int ID, int mode){
+		Byte[] data=Constants.CameraMode.getModeBytes(mode);
+		sendData.get(ID).add(data);
 	}
 	/**
 	 * Called by ClientSender thread to get next package to send.
@@ -106,10 +111,10 @@ public class ClientMonitor {
 	public synchronized void setCameraMode(int mode){
 		if (mode != Constants.CameraMode.AUTO_MODE && mode == cameraMode) {
 			forcedMode = true;
-			addSendData(mode);
+			addModeDataToAllConnections(mode);
 		} else {
 			forcedMode = false;
-			addSendData(mode);
+			addModeDataToAllConnections(mode);
 		}
 		cameraMode=mode;
 		notifyAll();
