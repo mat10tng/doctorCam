@@ -35,11 +35,18 @@ public class PictureHandler extends Thread {
 	 */
 	public void run() {
 		try {
+			long latestTime = 0;
+			int id = -1;
 			while (!isInterrupted()) {
 				Picture picture = clientMonitor.getPicture();
-				if ((System.currentTimeMillis() - picture.getTimeStamp()) > synchronizationThreashold) {
-					pictureMonitor.setMode(Constants.ViewMode.ASYNC_MODE);
+				id = pictureMonitor.checkVaildId(id);
+				if(id >=0 && picture.getId() != id){
+					if ((picture.getTimeStamp()-latestTime)  > synchronizationThreashold) {
+						pictureMonitor.setMode(Constants.ViewMode.ASYNC_MODE);
+					}
 				}
+				latestTime = picture.getTimeStamp();
+				id = picture.getId();
 				pictureMonitor.addPicture(picture);
 			}
 		} catch (InterruptedException e) {

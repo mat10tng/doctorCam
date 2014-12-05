@@ -6,7 +6,7 @@ import java.util.LinkedList;
 /**
  * @author Hans-Johan
  * @edit Shan
- *
+ * 
  */
 public class PictureMonitor {
 	private HashMap<Integer, LinkedList<Picture>> pictures;
@@ -33,9 +33,24 @@ public class PictureMonitor {
 	 *            : the mode which should be enabled
 	 */
 	public synchronized void setMode(int mode) {
+		System.out.println("set mode: " + mode);
 		if (!forcedMode) {
 			this.viewMode = mode;
 		}
+	}
+
+	/**
+	 * Checks if the id is in use (ergo the connection with id exists)
+	 * 
+	 * @param id
+	 *            : The id to be checked
+	 * @return -1 if there is none otherwise the valid id
+	 */
+	public synchronized int checkVaildId(int id) {
+		if (pictures.containsKey(id)) {
+			return id;
+		}
+		return -1;
 	}
 
 	/**
@@ -85,7 +100,9 @@ public class PictureMonitor {
 		while (pictures.containsKey(id) && pictures.get(id).isEmpty()) {
 			wait();
 		}
-		return pictures.get(id).pop();
+		Picture picture = pictures.get(id).pop();
+		System.out.println(picture.getModeString());
+		return picture;
 	}
 
 	/**
@@ -98,10 +115,12 @@ public class PictureMonitor {
 	 */
 	public synchronized void addPicture(Picture picture) {
 		if (pictures.containsKey(picture.getId())) {
-			if (latestTime != 0 && viewMode == Constants.ViewMode.SYNC_MODE) {
-				picture.setWaitTime(latestTime);
+			if (pictures.size() > 1) {
+				if (latestTime != 0 && viewMode == Constants.ViewMode.SYNC_MODE) {
+					picture.setWaitTime(latestTime);
+				}
+				latestTime = picture.getTimeStamp();
 			}
-			latestTime = picture.getTimeStamp();
 			picture.currentViewMode = viewMode;
 			pictures.get(picture.getId()).add(picture);
 			notifyAll();

@@ -50,7 +50,7 @@ public class ClientSender extends Thread {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		} catch (IOException e) {
-			e.printStackTrace();
+
 		}
 	}
 }
