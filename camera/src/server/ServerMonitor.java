@@ -69,16 +69,13 @@ public class ServerMonitor {
 	}
 
 	public synchronized void endConnection() throws InterruptedException {
-
 		while (!endConnection) {
 			wait();
 		}
-
 		newInputStream = false;
 		newOutputStream = false;
 		endConnection = false;
 		notifyAll();
-
 	}
 
 	public synchronized byte[] getPictureData() throws InterruptedException {
