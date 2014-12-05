@@ -58,9 +58,6 @@ public class ServerMonitor {
 		while (!newOutputStream) {
 			wait();
 		}
-	    if(socket.getOutputStream()==null){
-	    	System.out.println("error");
-	    }
 		return socket.getOutputStream();
 	}
 
@@ -78,7 +75,7 @@ public class ServerMonitor {
 		}
 
 		newInputStream = false;
-		newInputStream = false;
+		newOutputStream = false;
 		endConnection = false;
 		notifyAll();
 
