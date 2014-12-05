@@ -2,8 +2,7 @@ package server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+
 /**
  *Waits for a package sent from the client. 
  *Then updates the Monitor attributes clientMode or 
@@ -12,7 +11,6 @@ import java.net.Socket;
 public class ServerReceiver extends Thread{
 	private InputStream inStream;
 	private ServerMonitor serverMonitor;
-	private boolean terminate;
 	private static final int END_CONNECTION = -1;
 	private static final int MODE_ACTION = 1;
 	

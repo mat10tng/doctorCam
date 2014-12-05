@@ -65,7 +65,6 @@ public class ServerMonitor {
 	}
 
 	public synchronized void receivedTerminateConnection() throws IOException {
-		// TODO Auto-generated method stub
 		System.out.println("hello hello");
 		endConnection = true;
 		socket.close();
@@ -133,7 +132,6 @@ public class ServerMonitor {
 		newPictureData = true;
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
-		byte[] our = intToByte(dataLength);
 		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
 		offset = setData(lastPictureData, intToByte(dataLength),LEN_SIZE, offset);
 		offset = setData(lastPictureData, currentTime,TS_SIZE, offset);

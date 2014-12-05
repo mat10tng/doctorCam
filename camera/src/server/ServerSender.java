@@ -10,7 +10,6 @@ import java.io.OutputStream;
 public class ServerSender extends Thread{
 	private ServerMonitor serverMonitor;
 	private OutputStream outputStream;
-	private boolean newStream;
 	public static final byte[] MOTION_DETECTED_ID = { 1 };
 
 
