@@ -9,6 +9,12 @@ public class ServerHandler extends Thread{
 	private ServerSender serverSender;
 	private ServerReceiver serverReceiver;
 	private ServerMonitor serverMonitor;
+	/**
+	 * Start the server handler thread which take care of socket between server and client
+	 * @param port
+	 * @param serverMonitor
+	 * @throws IOException
+	 */
 	public ServerHandler(int port ,ServerMonitor serverMonitor) throws IOException {
 		serverSocket = new ServerSocket(port);
 		serverSender = new ServerSender(serverMonitor);
@@ -17,6 +23,10 @@ public class ServerHandler extends Thread{
 		serverSender.start();
 		serverReceiver.start();
 	}
+	
+	/**
+	 * Get the thread going.
+	 */
 	public void run(){
 		while(!Thread.interrupted()){
 				Socket socket;
@@ -29,7 +39,6 @@ public class ServerHandler extends Thread{
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-	
 		}	
 	}
 }
