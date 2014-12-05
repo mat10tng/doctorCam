@@ -70,7 +70,7 @@ public class ServerMonitor {
 		while (!endConnection) {
 			wait();
 		}
-		System.out.println("i should come here after received end coneection");
+		socket= null;
 		newStream = false;
 		endConnection = false;
 		notifyAll();
@@ -81,7 +81,7 @@ public class ServerMonitor {
 	
 	public synchronized InputStream getInputStream() throws IOException,
 			InterruptedException {
-		while (!newStream) wait();
+		while (socket == null) wait();
 		System.out.println("i should not be here inputstream after connection end");
 		return socket.getInputStream();
 	}
@@ -95,7 +95,7 @@ public class ServerMonitor {
 	//ServerSender only
 	public synchronized OutputStream getOutputStream() throws IOException,
 			InterruptedException {
-		while (!newStream) wait();
+		while (socket == null) wait();
 		return socket.getOutputStream();
 	}
 

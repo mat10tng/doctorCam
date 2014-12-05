@@ -57,7 +57,8 @@ public class CamListener extends Thread {
 					break;
 				default:
 					timeDifference  = timeDiff(currentTime,oldTime);
-					if(timeDifference > IDLE_MODE_TIME){
+					if(timeDifference > 0 ){
+//					if(timeDifference > IDLE_MODE_TIME ){
 						serverMonitor.newPictureData(jpeg,currentTime,length);
 						oldTime = currentTime;
 					}
