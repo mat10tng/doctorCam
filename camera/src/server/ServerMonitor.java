@@ -170,6 +170,7 @@ public class ServerMonitor {
 	}
 
 	public synchronized void updateJpeg(byte[] jpeg, int length){
+		lastJPEG = new byte[length];
 		setData(this.lastJPEG,jpeg,length,0);
 		aliveJPEG = true;
 		notifyAll();
