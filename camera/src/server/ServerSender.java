@@ -3,18 +3,20 @@ package server;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- * Waits for sendPicture or sendMotionDetected, 
- * then sends a picture or a Boolean-value to the client.
- */
+	/**
+	 * Server receiver take care of input stream. Take in different 
+	 * command from client when the thread is running
+	 */
 public class ServerSender extends Thread{
 	private ServerMonitor serverMonitor;
 	private OutputStream outputStream;
 	public static final byte[] MOTION_DETECTED_ID = { 1 };
 
-
+	/**
+	 * 
+	 * @param serverMonitor
+	 */
 	public ServerSender(ServerMonitor serverMonitor) {
-		// TODO Auto-generated constructor stub
 		this.serverMonitor = serverMonitor;
 		
 	}
@@ -26,7 +28,6 @@ public class ServerSender extends Thread{
 				outputStream.write(data);
 				if(serverMonitor.newMotionData()) outputStream.write(MOTION_DETECTED_ID);
 				outputStream.flush();
-
 			}
 			catch (IOException e) {
 				e.printStackTrace();

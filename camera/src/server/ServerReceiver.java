@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *Waits for a package sent from the client. 
- *Then updates the Monitor attributes clientMode or 
- *closeRequested depending on the type of package.	 
+	 * Server receiver take care of input stream. Take in different 
+	 * command from client when the thread is running 
  */
 public class ServerReceiver extends Thread{
 	private InputStream inStream;
@@ -14,16 +13,20 @@ public class ServerReceiver extends Thread{
 	private static final int END_CONNECTION = -1;
 	private static final int MODE_ACTION = 1;
 	
+	/**
+	 * @param serverMonitor
+	 * @throws IOException
+	 */
 	public ServerReceiver(ServerMonitor serverMonitor) throws IOException {
 		this.serverMonitor = serverMonitor;
 	}
 	public void run(){
 		while(!Thread.interrupted()){
-			
 			try {
 				inStream = serverMonitor.getInputStream();
 				int id = inStream.read();
-				System.out.println("we have somehing " + id);
+				System.out.println("we got the package " + id);
+				
 				switch(id){
 				case END_CONNECTION:
 					serverMonitor.receivedTerminateConnection();
@@ -35,7 +38,6 @@ public class ServerReceiver extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
