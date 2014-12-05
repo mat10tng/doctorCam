@@ -52,7 +52,7 @@ public class ServerMonitor {
 	public synchronized void updatePictureData(byte[] jpeg, byte[] currentTime,
 			int dataLength) throws InterruptedException {
 		// TODO Auto-generated method stub
-		lastJPEG = updateJpeg(jpeg,dataLength);
+		updateJpeg(jpeg,dataLength);
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
 		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
@@ -78,7 +78,6 @@ public class ServerMonitor {
 		while (!endConnection) {
 			wait();
 		}
-		streamAlive = false;
 		notifyAll();
 	}
 
@@ -97,6 +96,7 @@ public class ServerMonitor {
 	public synchronized void receivedTerminateConnection() throws IOException {
 		System.out.println("Connection has been terminate");
 		endConnection = true;
+		streamAlive = false;
 		notifyAll();
 	}
 
@@ -111,7 +111,7 @@ public class ServerMonitor {
 	}
 
 	public synchronized byte[] getPictureData() throws InterruptedException {
-		while (!newPictureData) {
+		while (!newPictureData || !streamAlive) {
 			wait();
 		}
 		newPictureData = false;
@@ -166,12 +166,11 @@ public class ServerMonitor {
 		return bytes;
 	}
 
-	private synchronized byte[] updateJpeg(byte[] jpeg, int length){
+	private synchronized void updateJpeg(byte[] jpeg, int length){
 		lastJPEG = new byte[length];
 		setData(this.lastJPEG,jpeg,length,0);
 		aliveJPEG = true;
 		notifyAll();
-		return jpeg;
 	}
 	public synchronized byte[] getLastJPEG() throws InterruptedException{
 		while (!aliveJPEG){
