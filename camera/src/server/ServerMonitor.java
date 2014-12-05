@@ -65,6 +65,10 @@ public class ServerMonitor {
 	
 	public synchronized void openNewConnection(Socket s) {
 		this.socket = s;
+		currentMode = AUTO_MODE;
+		newPictureData = false;
+		detectedMotion = false;
+		
 		streamAlive = true;
 		endConnection = false;
 		notifyAll();
@@ -155,7 +159,10 @@ public class ServerMonitor {
 		return bytes;
 	}
 	
-	public synchronized byte[] getLastJPEG(){
+	public synchronized byte[] getLastJPEG() throws InterruptedException{
+		while (!newPictureData){
+			wait();
+		}
 		return lastJPEG;
 	}
 
