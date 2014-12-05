@@ -17,23 +17,27 @@ public class CamListener extends Thread {
 	private int port;
 	private final static long IDLE_MODE_TIME = 5000;
 
-
+	/**
+	 * Creates a camera listener which use to communicate with the hardware.
+	 */
 	public CamListener(ServerMonitor serverMonitor, String adress, int port){
 		this.adress = adress;
 		this.port = port;
 		this.serverMonitor = serverMonitor;
 
 	}
+	/**
+	 * Start the thread.
+	 */
 	public void run() {
-		AxisM3006V camera = new AxisM3006V();
+		AxisM3006V camera = startCamera(adress, port);
+		
 		byte[] jpeg;
 		byte[] currentTime;
 		byte[] oldTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
 		long timeDifference;
 		int length;
-		camera.init();
-		camera.setProxy(adress,port);
-		camera.connect();
+
 		
 		while(!Thread.interrupted()){
 			jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
@@ -61,11 +65,28 @@ public class CamListener extends Thread {
 			}
 		}
 	}
+		
 	
+	/**
+	 * Initiate hardware and communication between server and camera.
+	 */
+	private AxisM3006V startCamera(String adress, int port){
+		AxisM3006V camera = new AxisM3006V();
+		camera.init();
+		camera.setProxy(adress,port);
+		camera.connect();
+		return camera;
+	}
 	
+	/**
+	 *Different in time from two byte array of time stamp.
+	 */
 	private long timeDiff(byte[] newTime, byte[] oldTime){
 		return byteToLong(newTime) - byteToLong(oldTime);
 	}
+	/**
+	 * Convert a byte array to a long
+	 */
 	private long byteToLong(byte[] byteTime){
 		long time=0;
 		for(int i=0;i<8;i++){
