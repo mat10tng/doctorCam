@@ -34,6 +34,7 @@ public class ServerHandler extends Thread{
 					socket = serverSocket.accept();
 					serverMonitor.openNewConnection(socket);
 					serverMonitor.endConnection();
+					socket.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (InterruptedException e) {

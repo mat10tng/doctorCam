@@ -22,8 +22,7 @@ public class ServerMonitor {
 	private boolean newPictureData;
 	private boolean detectedMotion;
 
-	private boolean newInputStream;
-	private boolean newOutputStream;
+	private boolean newStream;
 	private Socket socket;
 
 	private boolean endConnection;
@@ -31,8 +30,7 @@ public class ServerMonitor {
 	public ServerMonitor() {
 		setMode(AUTO_MODE);
 		newPictureData = false;
-		newInputStream = false;
-		newInputStream = false;
+		newStream = false;
 		endConnection = false;
 		detectedMotion = false;
 	}
@@ -64,8 +62,7 @@ public class ServerMonitor {
 	
 	public synchronized void openNewConnection(Socket s) {
 		this.socket = s;
-		newInputStream = true;
-		newOutputStream = true;
+		newStream = true;
 		notifyAll();
 	}
 	
@@ -73,8 +70,8 @@ public class ServerMonitor {
 		while (!endConnection) {
 			wait();
 		}
-		newInputStream = false;
-		newOutputStream = false;
+		System.out.println("i should come here after received end coneection");
+		newStream = false;
 		endConnection = false;
 		notifyAll();
 	}
@@ -84,25 +81,21 @@ public class ServerMonitor {
 	
 	public synchronized InputStream getInputStream() throws IOException,
 			InterruptedException {
-		while (!newInputStream) {
-			wait();
-		}
+		while (!newStream) wait();
+		System.out.println("i should not be here inputstream after connection end");
 		return socket.getInputStream();
 	}
 	
 	public synchronized void receivedTerminateConnection() throws IOException {
-		System.out.println("hello hello");
+		System.out.println("Connection has been terminate");
 		endConnection = true;
-		socket.close();
 		notifyAll();
 	}
 
 	//ServerSender only
 	public synchronized OutputStream getOutputStream() throws IOException,
 			InterruptedException {
-		while (!newOutputStream) {
-			wait();
-		}
+		while (!newStream) wait();
 		return socket.getOutputStream();
 	}
 
@@ -111,7 +104,6 @@ public class ServerMonitor {
 			wait();
 		}
 		newPictureData = false;
-
 		return lastPictureData;
 	}
 
@@ -158,7 +150,6 @@ public class ServerMonitor {
 		bytes[index++] = (byte) ((data & 0x000000ff));
 		
 
-		
 		return bytes;
 	}
 
