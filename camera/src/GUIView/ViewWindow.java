@@ -1,10 +1,12 @@
 package GUIView;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -28,7 +30,7 @@ public class ViewWindow extends JFrame {
 		this.setSize(700, 550);
 		this.setVisible(true);
 		this.setResizable(false);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		lastPictureUpdated=0;
 	}
 
@@ -48,13 +50,12 @@ public class ViewWindow extends JFrame {
 		settingsString+=" latency="+picture.getLatencyInMS();
 		settings.setText(settingsString);
 		imagePanel.setPicture(picture.getPicture());
-		// Update picture and settings
 	}
 
 
 	public void close() {
 		this.dispose();
-		
 	}
+
 
 }

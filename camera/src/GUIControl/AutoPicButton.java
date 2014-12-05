@@ -9,6 +9,10 @@ import client.ClientMonitor;
 import client.Constants;
 
 public class AutoPicButton extends JRadioButton implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ClientMonitor monitor;
 	public AutoPicButton(ClientMonitor monitor) {
 		super("Auto");

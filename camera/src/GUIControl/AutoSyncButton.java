@@ -8,6 +8,13 @@ import client.Constants;
 import client.PictureMonitor;
 
 public class AutoSyncButton extends JRadioButton implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6838423612595487754L;
+	/**
+	 * 
+	 */
 	private PictureMonitor pictureMonitor;
 	public AutoSyncButton(PictureMonitor pictureMonitor) {
 		super("Auto");

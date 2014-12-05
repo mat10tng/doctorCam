@@ -8,7 +8,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String adress = "argus-7.student.lth.se";
+		String adress = "argus-1.student.lth.se";
 		int port = 5555;
 		ServerMonitor serverMonitor = new ServerMonitor();
 		CamListener camListener = new CamListener(serverMonitor,adress,port);

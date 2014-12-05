@@ -9,6 +9,10 @@ import client.Constants;
 import client.PictureMonitor;
 
 public class AsynchronizedButton extends JRadioButton implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5992653423673039332L;
 	private PictureMonitor pictureMonitor;
 
 	public AsynchronizedButton(PictureMonitor pictureMonitor) {

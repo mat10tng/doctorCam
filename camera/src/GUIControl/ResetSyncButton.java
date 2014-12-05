@@ -14,8 +14,8 @@ public class ResetSyncButton extends JButton implements ActionListener{
 	public ResetSyncButton(PictureMonitor pictureMonitor) {
 		super("Reset");
 		this.setSize(50, 50);
-		
 		this.pictureMonitor  = pictureMonitor;
+		addActionListener(this);
 	}
 
 	@Override

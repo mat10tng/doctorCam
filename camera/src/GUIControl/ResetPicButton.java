@@ -3,6 +3,7 @@ package GUIControl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 
 import client.ClientMonitor;
@@ -15,6 +16,7 @@ public class ResetPicButton extends JButton implements ActionListener{
 		super("Reset");
 		this.setSize(50, 50);
 		this.clientMonitor = clientMonitor;
+		addActionListener(this);
 	}
 
 	@Override
