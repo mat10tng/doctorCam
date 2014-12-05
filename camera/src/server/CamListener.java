@@ -33,8 +33,8 @@ public class CamListener extends Thread {
 		AxisM3006V camera = startCamera(adress, port);
 		
 		byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];;
-		byte[] currentTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];;
-		byte[] oldTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
+		byte[] currentTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
+		long oldTime =0;
 
 
 		long timeDifference;
@@ -44,7 +44,7 @@ public class CamListener extends Thread {
 		while(!Thread.interrupted()){
 			length = camera.getJPEG(jpeg, 0);
 			camera.getTime(currentTime, 0);
-			
+
 			if (camera.motionDetected() 
 					&& serverMonitor.getCurrentMode() == ServerMonitor.AUTO_MODE) {
 				serverMonitor.detectedMotion();
@@ -54,16 +54,17 @@ public class CamListener extends Thread {
 			switch(serverMonitor.getCurrentMode()){
 				case ServerMonitor.MOVIE_MODE:
 					serverMonitor.newPictureData(jpeg,currentTime,length);
+					oldTime = byteToLong(currentTime);
 					break;
 				default:
-					timeDifference  = timeDiff(currentTime,oldTime);
-					if(timeDifference > 0 ){
-//					if(timeDifference > IDLE_MODE_TIME ){
+					timeDifference = byteToLong(currentTime) - oldTime;
+					if(timeDifference > IDLE_MODE_TIME ){
 						serverMonitor.newPictureData(jpeg,currentTime,length);
-						oldTime = currentTime;
+						oldTime = byteToLong(currentTime);
 					}
 					break;
 			}
+
 		}
 	}
 		
@@ -79,12 +80,6 @@ public class CamListener extends Thread {
 		return camera;
 	}
 	
-	/**
-	 *Different in time from two byte array of time stamp.
-	 */
-	private long timeDiff(byte[] newTime, byte[] oldTime){
-		return byteToLong(newTime) - byteToLong(oldTime);
-	}
 	/**
 	 * Convert a byte array to a long
 	 */

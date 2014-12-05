@@ -15,24 +15,23 @@ public class ServerMonitor {
 	public static final int TS_SIZE = 8;
 
 	public static final byte[] PICTURE_DATA_ID = { 0 };
-
+	private Socket socket;
 	private int currentMode; // Depends on clientMode as well
 								// as if motion is detected by theCamera H.W.
 	private byte[] lastPictureData; // The most recent picture from Camera H.W.
+	
 	private boolean newPictureData;
 	private boolean detectedMotion;
-
-	private boolean newStream;
-	private Socket socket;
-
+	private boolean streamAlive;
 	private boolean endConnection;
 
 	public ServerMonitor() {
-		setMode(AUTO_MODE);
+		
+		currentMode = AUTO_MODE;
 		newPictureData = false;
-		newStream = false;
-		endConnection = false;
 		detectedMotion = false;
+		streamAlive = false;
+		endConnection = false;
 	}
 
 	// CamListener only 
@@ -62,17 +61,17 @@ public class ServerMonitor {
 	
 	public synchronized void openNewConnection(Socket s) {
 		this.socket = s;
-		newStream = true;
+		streamAlive = true;
+		endConnection = false;
+		System.out.println("new connection etablished");
 		notifyAll();
 	}
 	
-	public synchronized void endConnection() throws InterruptedException {
+	public synchronized void endConnection() throws InterruptedException, IOException {
 		while (!endConnection) {
 			wait();
 		}
-		socket= null;
-		newStream = false;
-		endConnection = false;
+		streamAlive = false;
 		notifyAll();
 	}
 
@@ -81,7 +80,7 @@ public class ServerMonitor {
 	
 	public synchronized InputStream getInputStream() throws IOException,
 			InterruptedException {
-		while (socket == null) wait();
+		while (!streamAlive) wait();
 		System.out.println("i should not be here inputstream after connection end");
 		return socket.getInputStream();
 	}
@@ -95,7 +94,7 @@ public class ServerMonitor {
 	//ServerSender only
 	public synchronized OutputStream getOutputStream() throws IOException,
 			InterruptedException {
-		while (socket == null) wait();
+		while (!streamAlive) wait();
 		return socket.getOutputStream();
 	}
 
