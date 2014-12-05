@@ -32,16 +32,16 @@ public class CamListener extends Thread {
 	public void run() {
 		AxisM3006V camera = startCamera(adress, port);
 		
-		byte[] jpeg;
-		byte[] currentTime;
+		byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];;
+		byte[] currentTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];;
 		byte[] oldTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
+
+
 		long timeDifference;
 		int length;
 
 		
 		while(!Thread.interrupted()){
-			jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
-			currentTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
 			length = camera.getJPEG(jpeg, 0);
 			camera.getTime(currentTime, 0);
 			
