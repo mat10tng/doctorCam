@@ -88,7 +88,11 @@ public class ProcessHandler extends Thread {
 					System.out.println("Failed to connect to Host");
 					views.get(id).interrupt();
 					e.printStackTrace();
-				} 
+				} catch (IOException e) {
+					System.out.println("something went wrong");
+					views.get(id).interrupt();
+					e.printStackTrace();
+				}
 
 			}
 		} catch (InterruptedException e1) {
