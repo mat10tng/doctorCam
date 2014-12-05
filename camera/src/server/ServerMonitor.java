@@ -173,6 +173,7 @@ public class ServerMonitor {
 		lastJPEG = new byte[length];
 		setData(this.lastJPEG,jpeg,length,0);
 		aliveJPEG = true;
+		streamHTTP = true;
 		notifyAll();
 	}
 	public synchronized byte[] getLastJPEG() throws InterruptedException{
@@ -180,6 +181,9 @@ public class ServerMonitor {
 			wait();
 		}
 		return lastJPEG;
+	}
+	public synchronized void closeHTTP(){
+		streamHTTP = false;
 	}
 
 }
