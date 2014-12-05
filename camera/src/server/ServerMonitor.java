@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class ServerMonitor {
+	public static final int AUTO_MODE = 2;
 	public static final int IDLE_MODE = 0;
 	public static final int MOVIE_MODE = 1;
+	
 	public static final int ID_SIZE = 1;
 	public static final int LEN_SIZE = 4;
 	public static final int TS_SIZE = 8;
@@ -100,9 +100,14 @@ public class ServerMonitor {
 
 	public synchronized void setMode(int read) {
 		switch (read) {
+		case AUTO_MODE:
+			currentMode = AUTO_MODE;
+			System.out.println("Autobot roll out");
+			break;
+			
 		case IDLE_MODE:
 			currentMode = IDLE_MODE;
-			System.out.println("this is idle mode");
+			System.out.println("This is idle mode");
 			break;
 		case MOVIE_MODE:
 			currentMode = MOVIE_MODE;
@@ -116,11 +121,6 @@ public class ServerMonitor {
 		return currentMode;
 	}
 
-//	public synchronized int movieMode() {
-//		detectedMotion = false;
-//		notifyAll();
-//		return currentMode;
-//	}
 
 	public synchronized void detectedMotion() {
 		detectedMotion = true;

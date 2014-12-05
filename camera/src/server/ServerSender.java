@@ -24,9 +24,6 @@ public class ServerSender extends Thread{
 			try {
 				outputStream = serverMonitor.getOutputStream();
 				byte[] data=serverMonitor.getPictureData();
-				int length=data.length;
-				System.out.println(length);
-				
 				outputStream.write(data);
 				if(serverMonitor.newMotionData()) outputStream.write(MOTION_DETECTED_ID);
 				outputStream.flush();

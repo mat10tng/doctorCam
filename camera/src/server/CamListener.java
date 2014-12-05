@@ -43,22 +43,26 @@ public class CamListener extends Thread {
 			timeDifference  = timeDiff(currentTime,oldTime);
 
 			if (camera.motionDetected() 
-					&& serverMonitor.getCurrentMode() == ServerMonitor.IDLE_MODE) {
+					&& serverMonitor.getCurrentMode() == ServerMonitor.AUTO_MODE) {
 				serverMonitor.detectedMotion();
+				serverMonitor.setMode(ServerMonitor.MOVIE_MODE);
 			}
 			switch(serverMonitor.getCurrentMode()){
-			case ServerMonitor.IDLE_MODE:
-				if(timeDifference > IDLE_MODE_TIME){
+				case ServerMonitor.MOVIE_MODE:
 					serverMonitor.newPictureData(jpeg,currentTime,length);
-					oldTime = currentTime;
-				}
-				break;
-			case ServerMonitor.MOVIE_MODE:
-					serverMonitor.newPictureData(jpeg,currentTime,length);
-				break;
+					break;
+				default:
+					if(timeDifference > IDLE_MODE_TIME){
+						serverMonitor.newPictureData(jpeg,currentTime,length);
+						oldTime = currentTime;
+					}
+					break;
+
 			}
 		}
 	}
+	
+	
 	private long timeDiff(byte[] newTime, byte[] oldTime){
 		return byteToLong(newTime) - byteToLong(oldTime);
 	}
