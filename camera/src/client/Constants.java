@@ -29,6 +29,9 @@ public class Constants {
 		public static Byte[] getIdleBytes(){
 			return getBytes(IDLE_MODE);
 		}
+		public static Byte[] getAutoBytes(){
+			return getBytes(AUTO_MODE);
+		}
 	}
 	public static class ViewMode {
 		public static final int SYNC_MODE = 0;

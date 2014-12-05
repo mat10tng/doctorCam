@@ -9,6 +9,7 @@ public class ClientMonitor {
 	private LinkedList<Picture> pictures;
 	private int cameraMode;
 	private boolean forcedMode;
+	private boolean destroyed;
 	
 	
 	/**
@@ -20,6 +21,7 @@ public class ClientMonitor {
 		sendData=new HashMap<Integer,LinkedList<Byte[]>>();
 		pictures= new LinkedList<Picture>();
 		cameraMode=Constants.CameraMode.IDLE_MODE;
+		destroyed = false;
 	}
 	
 	
@@ -28,7 +30,7 @@ public class ClientMonitor {
 	 * or a connection is to be closed
 	 * */
 	public synchronized void addConnectionData(ConnectionData data){
-		if(data.getAction()==Constants.ConnectionActions.OPEN_CONNECTION){
+		if(data != null && data.getAction()==Constants.ConnectionActions.OPEN_CONNECTION){
 			sendData.put(data.getID(), new LinkedList<Byte[]>());
 		}
 		queue.add(data);
@@ -74,6 +76,8 @@ public class ClientMonitor {
 		case(Constants.CameraMode.MOVIE_MODE):
 			modeData=Constants.CameraMode.getMovieBytes();
 			break;
+		case(Constants.CameraMode.AUTO_MODE):
+			modeData = Constants.CameraMode.getAutoBytes();
 		default:
 			System.out.println("wrong in assSendData: "+this.toString());
 			System.exit(1);
@@ -99,15 +103,14 @@ public class ClientMonitor {
 	 * @param mode: a constant listed in Constants.CameraMode
 	 */
 	public synchronized void setCameraMode(int mode){
-		if (mode != Constants.CameraMode.AUTO_MODE) {
-			cameraMode=mode;
+		if (mode != Constants.CameraMode.AUTO_MODE && mode == cameraMode) {
 			forcedMode = true;
 			addSendData(mode);
 		} else {
-			cameraMode=Constants.CameraMode.IDLE_MODE;
 			forcedMode = false;
-			addSendData(Constants.CameraMode.IDLE_MODE);
+			addSendData(mode);
 		}
+		cameraMode=mode;
 		notifyAll();
 	}
 	public synchronized void removeConnection(int ID){
@@ -118,5 +121,26 @@ public class ClientMonitor {
 			wait();
 		}
 		return pictures.pop();
+	}
+
+
+	/**
+	 * Close all connections, wait until every connection is closed (or destroyed)
+	 * @throws InterruptedException
+	 */
+	public synchronized void closeAllSockets() throws InterruptedException {
+		addConnectionData(null);
+		while(!destroyed){
+			wait();
+		}
+		
+	}
+
+
+	/**
+	 * Set destory variable to true, to indicate it is okay to kill the system
+	 */
+	public synchronized void destroyed() {
+		destroyed = true;
 	}
 }

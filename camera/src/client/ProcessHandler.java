@@ -49,6 +49,9 @@ public class ProcessHandler extends Thread {
 		try {
 			while (!isInterrupted()) {
 				cdata = clientMonitor.getConnectionData();
+				if(cdata == null){
+					closeAllConnections();
+				}
 				int id = cdata.getID();
 				switch (cdata.getAction()) {
 				case (Constants.ConnectionActions.OPEN_CONNECTION):
@@ -93,5 +96,17 @@ public class ProcessHandler extends Thread {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Closes all connections
+	 * @throws IOException
+	 */
+	private void closeAllConnections() throws IOException {
+		for(int id: clientSockets.keySet()){
+			clientSockets.get(id).close();
+		}
+		clientMonitor.destroyed();
+		
 	}
 }

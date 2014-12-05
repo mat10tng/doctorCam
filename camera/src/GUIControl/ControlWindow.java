@@ -14,10 +14,12 @@ public class ControlWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -5227371010759534852L;
+	private ClientMonitor clientMonitor;
 
 	public ControlWindow(ClientMonitor clientMonitor,
 			PictureMonitor pictureMonitor) {
 		super("Control");
+		this.clientMonitor = clientMonitor;
 		ImageIcon img = new ImageIcon("control.png");
 		setIconImage(img.getImage());
 		this.add(new ControlPanel(clientMonitor, pictureMonitor));
@@ -27,6 +29,16 @@ public class ControlWindow extends JFrame {
 		setResizable(false);
 	}
 
+	public void windowClosing(WindowEvent e) {
+		// send your socket its close message and shut everything down
+		try {
+			clientMonitor.closeAllSockets();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.exit(0);
+	}
 	public static void main(String args[]) {
 		try {
 			// Set cross-platform Java L&F (also called "Metal")
@@ -43,9 +55,5 @@ public class ControlWindow extends JFrame {
 		new ControlWindow(cmonitor, pmonitor);
 	}
 
-	public void windowClosing(WindowEvent e) {
-		// send your socket its close message and shut everything down
-		System.exit(0);
-	}
 
 }
