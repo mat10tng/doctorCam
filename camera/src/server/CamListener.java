@@ -1,6 +1,5 @@
 package server;
 
-//import se.lth.cs.eda040.fakecamera.*;
 import se.lth.cs.eda040.proxycamera.AxisM3006V;
 
 /**
@@ -34,6 +33,8 @@ public class CamListener extends Thread {
 		
 		byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];;
 		byte[] currentTime = new byte[AxisM3006V.TIME_ARRAY_SIZE];
+		
+		
 		long oldTime =0;
 
 
@@ -49,17 +50,18 @@ public class CamListener extends Thread {
 				serverMonitor.detectedMotion();
 				serverMonitor.setMode(ServerMonitor.MOVIE_MODE);
 			}
-			
+			serverMonitor.updateJpeg(jpeg,length);
 			switch(serverMonitor.getCurrentMode()){
 				case ServerMonitor.MOVIE_MODE:
 					oldTime = updatePictureData(jpeg,currentTime,length);
-					serverMonitor.notifyNewPicture();
+					//serverMonitor.notifyNewPicture();
 					break;
 				default:
 					timeDifference = byteToLong(currentTime) - oldTime;
 					if(timeDifference > IDLE_MODE_TIME ){
 						oldTime = updatePictureData(jpeg,currentTime,length);
-						serverMonitor.notifyNewPicture();
+						//serverMonitor.notifyNewPicture();
+					}else{
 					}
 					break;
 			}
@@ -82,22 +84,22 @@ public class CamListener extends Thread {
 	/**
 	 * Convert a byte array to a long
 	 */
-	private long byteToLong(byte[] byteTime){
-		long time=0;
-		for(int i=0;i<8;i++){
-			time=time<<8;
-			long addTime=(long)byteTime[i];
-			time+=addTime;
-		}
-		return time;
+	private long byteToLong(byte[] bytes){
+		long i=
+				(bytes[7] & 0xFFL) |
+				(bytes[6] & 0xFFL) << 8 |
+				(bytes[5] & 0xFFL) << 16 |
+				(bytes[4] & 0xFFL) << 24 |
+				(bytes[3] & 0xFFL) << 32|
+				(bytes[2] & 0xFFL) << 40 |
+				(bytes[1] & 0xFFL) << 48 |
+				(bytes[0] & 0xFFL) << 56;
+
+		return i; 
+
 	}
 	private long updatePictureData(byte[] jpeg, byte[] currentTime, int length){
-		try {
-			serverMonitor.updatePictureData(jpeg,currentTime,length);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		serverMonitor.updatePictureData(jpeg,currentTime,length);
 		return  byteToLong(currentTime);
 	}
 }

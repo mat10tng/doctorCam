@@ -28,7 +28,7 @@ public class ServerMonitor {
 	private boolean endConnection;
 
 	
-	private boolean streamHTTP;
+	//private boolean streamHTTP;
 	public ServerMonitor() {
 		
 		currentMode = AUTO_MODE;
@@ -36,7 +36,7 @@ public class ServerMonitor {
 		detectedMotion = false;
 		streamAlive = false;
 		endConnection = false;
-		streamHTTP  = false;
+		aliveJPEG=false;
 	}
 
 	// CamListener only 
@@ -50,17 +50,18 @@ public class ServerMonitor {
 	}
 	
 	public synchronized void updatePictureData(byte[] jpeg, byte[] currentTime,
-			int dataLength) throws InterruptedException {
+			int dataLength){
 		// TODO Auto-generated method stub
-		updateJpeg(jpeg,dataLength);
+		//updateJpeg(jpeg,dataLength);
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
 		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
 		offset = setData(lastPictureData, intToByte(dataLength),LEN_SIZE, offset);
 		offset = setData(lastPictureData, currentTime,TS_SIZE, offset);
 		offset = setData(lastPictureData, lastJPEG,dataLength, offset);
+		notifyNewPicture();
 	}
-	public synchronized void notifyNewPicture(){
+	private void notifyNewPicture(){
 		newPictureData = true;
 		notifyAll();
 	}
@@ -89,12 +90,12 @@ public class ServerMonitor {
 		while (!streamAlive) {
 			wait();
 		}
-		System.out.println("i should not be here inputstream after connection end");
+		//System.out.println("i should not be here inputstream after connection end");
 		return socket.getInputStream();
 	}
 	
-	public synchronized void receivedTerminateConnection() throws IOException {
-		System.out.println("Connection has been terminate");
+	public synchronized void receivedTerminateConnection() {
+		//System.out.println("Connection has been terminate");
 		endConnection = true;
 		streamAlive = false;
 		notifyAll();
@@ -126,24 +127,24 @@ public class ServerMonitor {
 	
 	// others share
 	public synchronized void setMode(int read) {
-		switch (read) {
-		case AUTO_MODE:
-			currentMode = AUTO_MODE;
-			System.out.println("Autobot roll out");
-			break;
-			
-		case IDLE_MODE:
-			currentMode = IDLE_MODE;
-			System.out.println("This is idle mode");
-			break;
-		case MOVIE_MODE:
-			currentMode = MOVIE_MODE;
-			System.out.println("We got movie night");
-			break;
-		}
+//		switch (read) {
+//		case AUTO_MODE:
+//			currentMode = AUTO_MODE;
+//			System.out.println("Autobot roll out");
+//			break;
+//			
+//		case IDLE_MODE:
+//			currentMode = IDLE_MODE;
+//			System.out.println("This is idle mode");
+//			break;
+//		case MOVIE_MODE:
+//			currentMode = MOVIE_MODE;
+//			System.out.println("We got movie night");
+//			break;
+//		}
+		currentMode=read;
 		notifyNewPicture();
-
-		notifyAll();
+		//notifyAll();
 	}
 
 	private int setData(byte[] lastPictureData, byte[] data,int length, int offset) {
@@ -165,7 +166,7 @@ public class ServerMonitor {
 		return bytes;
 	}
 
-	private synchronized void updateJpeg(byte[] jpeg, int length){
+	public synchronized void updateJpeg(byte[] jpeg, int length){
 		lastJPEG = new byte[length];
 		setData(this.lastJPEG,jpeg,length,0);
 		aliveJPEG = true;

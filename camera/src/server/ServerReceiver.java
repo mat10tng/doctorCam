@@ -25,9 +25,10 @@ public class ServerReceiver extends Thread{
 			try {
 				inStream = serverMonitor.getInputStream();
 				int id = inStream.read();
-				System.out.println("we got the package " + id);
+				//System.out.println("we got the package " + id);
 				
 				switch(id){
+				//we are switching on END_CONNECTIONS, but currently no such packages are sent
 				case END_CONNECTION:
 					serverMonitor.receivedTerminateConnection();
 					break;
@@ -36,9 +37,10 @@ public class ServerReceiver extends Thread{
 					break;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				serverMonitor.receivedTerminateConnection();
+				//e.printStackTrace();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 
 		}

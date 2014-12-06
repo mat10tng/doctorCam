@@ -25,4 +25,14 @@ public class IpInformation {
 	public String toString(){
 		return (host + ", " + port);
 	}
+	
+	public boolean equals(Object o){
+		IpInformation ipinf = (IpInformation)(o);
+		if(ipinf.host.equals(host)){
+			return ipinf.port == port;
+			
+		}
+		return false;
+		
+	}
 }

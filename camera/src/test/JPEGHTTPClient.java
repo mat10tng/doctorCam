@@ -8,14 +8,16 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 
-import se.lth.cs.eda040.fakecamera.*; // To gain access to maximum image size
+//import se.lth.cs.eda040.fakecamera.*; // To gain access to maximum image size
+import se.lth.cs.eda040.realcamera.*;
 
 public class JPEGHTTPClient {
 
 	public static void main(String[] args) {
 		args=new String[2];
-		args[0]="localhost";
-		args[1]="3333";
+		args[0]="http://argus-1";
+		//args[1]="3001";
+		args[1]="6077";
 		if (args.length!=2) {
 			System.out.println("Syntax: JPEGHTTPClient <address> <port>");
 			System.exit(1);

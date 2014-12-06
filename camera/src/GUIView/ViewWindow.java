@@ -1,6 +1,7 @@
 package GUIView;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
@@ -10,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import client.Constants;
 import client.Picture;
 
 public class ViewWindow extends JFrame {
@@ -49,6 +51,7 @@ public class ViewWindow extends JFrame {
 		settingsString+=" fps="+fpsString;
 		settingsString+=" latency="+picture.getLatencyInMS();
 		settings.setText(settingsString);
+//		this.setForeground(picture.currentCameraMode == Constants.CameraMode.MOVIE_MODE ? Color.cyan : Color.LIGHT_GRAY);
 		imagePanel.setPicture(picture.getPicture());
 	}
 

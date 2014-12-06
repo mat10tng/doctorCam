@@ -4,12 +4,12 @@ import java.io.IOException;
 
 import server.*;
 
-public class TestHTTPAndRegular {
+public class TestHTTPAndRegular7 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String adress = "argus-7.student.lth.se";
-		int port = 2222;
+		int port = 7777;
 		ServerMonitor serverMonitor = new ServerMonitor();
 		CamListener camListener = new CamListener(serverMonitor,adress,port);
 		camListener.start();

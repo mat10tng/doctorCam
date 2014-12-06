@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
+import org.omg.CORBA.Environment;
+
 import client.ClientMonitor;
 import client.ConnectionData;
 import client.Constants;
@@ -20,7 +22,6 @@ public class AddCameraButton extends JButton implements ActionListener {
 	private ClientMonitor clientMonitor;
 	private HashMap<Integer, IpInformation> ipinformation;
 	private ImageIcon cam;
-
 
 	public AddCameraButton(HashMap<Integer, IpInformation> ipinformations,
 			ClientMonitor clientMonitor) {
@@ -48,14 +49,29 @@ public class AddCameraButton extends JButton implements ActionListener {
 		}
 		if (found) {
 			String ip = JOptionPane.showInputDialog("Enter ip address: ");
-			int port = Integer.parseInt(JOptionPane
-					.showInputDialog("Enter port: "));
-			ipinformation.put(id, new IpInformation(ip, port,id));
-			clientMonitor.addConnectionData(new ConnectionData(ip,port,id,Constants.ConnectionActions.OPEN_CONNECTION));
-		}else{
-			JOptionPane.showMessageDialog(null, "Cannot connect to more cameras");
+			String portString = JOptionPane.showInputDialog("Enter port: ");
+			if (portString != null && ip != null) {
+				int port = Integer.parseInt(portString);
+				IpInformation newInfo = new IpInformation(ip, port, id);
+				if (isUniqueInfo(newInfo)) {
+					ipinformation.put(id, new IpInformation(ip, port, id));
+					clientMonitor.addConnectionData(new ConnectionData(ip,
+							port, id,
+							Constants.ConnectionActions.OPEN_CONNECTION));
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Connection with info: "+newInfo+" already established");
+				}
+			}
+
+		} else {
+			JOptionPane.showMessageDialog(null,
+					"Cannot connect to more cameras");
 		}
 
 	}
 
+	private boolean isUniqueInfo(IpInformation newInfo) {
+		return !ipinformation.values().contains(newInfo);
+	}
 }

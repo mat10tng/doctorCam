@@ -30,11 +30,11 @@ public class ServerSender extends Thread{
 				outputStream.flush();
 			}
 			catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}

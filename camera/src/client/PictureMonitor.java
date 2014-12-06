@@ -86,8 +86,12 @@ public class PictureMonitor {
 	 * @param id
 	 *            The connection ID
 	 */
-	public synchronized void removePictureSource(int id) {
+	public synchronized void removePictureSource(int id) {	
 		pictures.remove(id);
+		//reset latest if it is not needed
+		if(pictures.size()<2){
+			latestTime=0;
+		}
 	}
 
 	/**
@@ -101,7 +105,6 @@ public class PictureMonitor {
 			wait();
 		}
 		Picture picture = pictures.get(id).pop();
-		System.out.println(picture.getModeString());
 		return picture;
 	}
 
@@ -123,6 +126,7 @@ public class PictureMonitor {
 			}
 			picture.currentViewMode = viewMode;
 			pictures.get(picture.getId()).add(picture);
+			System.out.println("PMonitorSize: "+pictures.get(picture.getId()).size()+" for ID="+picture.getId());
 			notifyAll();
 		}
 	}

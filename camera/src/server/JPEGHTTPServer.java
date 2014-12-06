@@ -11,10 +11,12 @@ package server;
  * Adapted for Axis cameras by Roger Henriksson 
  */
 
-import java.net.*;                  // Provides ServerSocket, Socket
-import java.io.*;                   // Provides InputStream, OutputStream
-
-import se.lth.cs.eda040.fakecamera.*;      // Provides AxisM3006V
+import java.io.IOException;
+import java.io.InputStream;                   // Provides InputStream, OutputStream
+import java.io.OutputStream;
+import java.net.ServerSocket;                  // Provides ServerSocket, Socket
+import java.net.Socket;
+// Provides AxisM3006V
 
 /**
  * Itsy bitsy teeny weeny web server. Always returns an image, regardless
@@ -48,9 +50,9 @@ public class JPEGHTTPServer extends Thread{
 		try {
 			serverSocket = new ServerSocket(myPort);
 
-			System.out.println("HTTP server operating at port " + myPort + ".");
+			//System.out.println("HTTP server operating at port " + myPort + ".");
 
-			while (true) {
+			while (!isInterrupted()) {
 				try {
 					// The 'accept' method waits for a client to connect, then
 					// returns a socket connected to that client.
@@ -76,8 +78,8 @@ public class JPEGHTTPServer extends Thread{
 						cont = !(header.equals(""));
 					} while (cont);
 
-					System.out.println("HTTP request '" + request
-							+ "' received.");
+					//System.out.println("HTTP request '" + request
+					//		+ "' received.");
 
 					// Interpret the request. Complain about everything but GET.
 					// Ignore the file name.
@@ -117,23 +119,23 @@ public class JPEGHTTPServer extends Thread{
 						putLine(os, "No can do. Request '" + request
 								+ "' not understood.");
 
-						System.out.println("Unsupported HTTP request!");
+						//System.out.println("Unsupported HTTP request!");
 					}
 
 					os.flush();                      // Flush any remaining content
 					clientSocket.close();	          // Disconnect from the client
 				}
 				catch (IOException e) {
-					System.out.println("Caught exception " + e);
+					//System.out.println("Caught exception " + e);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			//serverSocket.close();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
 	}
 
