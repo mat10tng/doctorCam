@@ -58,6 +58,7 @@ public class ProcessHandler extends Thread {
 					case (Constants.ConnectionActions.OPEN_CONNECTION):
 						views.put(id, new ViewHandler(picMonitor,
 								new ViewWindow("Camera: " + id), id));
+						views.get(id).start();
 						clientSockets.put(id,
 								new Socket(cdata.getIP(), cdata.getPort()));
 						ClientReceiver receiver = new ClientReceiver(
@@ -66,7 +67,6 @@ public class ProcessHandler extends Thread {
 						senders.put(id, new ClientSender(clientMonitor,
 								clientSockets.get(id).getOutputStream(), id));
 						picMonitor.registerPictureSource(id);
-						views.get(id).start();
 						senders.get(id).start();
 						receiver.start();
 						break;
@@ -100,7 +100,7 @@ public class ProcessHandler extends Thread {
 					+ e1.getMessage());
 			Thread.currentThread().interrupt();
 		} catch (IOException e) {
-			System.out.println("something went wrong");
+			System.out.println("something went wrong 2");
 			e.printStackTrace();
 		}
 

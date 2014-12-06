@@ -53,8 +53,6 @@ public class ClientMonitor {
 			picture.currentCameraMode = cameraMode;
 		}
 		pictures.add(picture);
-		System.out.println("     number of Pictures in CMonitor: "
-				+ pictures.size());
 		Collections.sort(pictures);
 		notifyAll();
 	}
@@ -98,7 +96,7 @@ public class ClientMonitor {
 			modeData = Constants.CameraMode.getAutoBytes();
 			break;
 		default:
-			System.out.println("wrong in addSendData: " + this.toString());
+			//System.out.println("wrong in addSendData: " + this.toString());
 			System.exit(1);
 		}
 		for (LinkedList<Byte[]> queue : sendData.values()) {

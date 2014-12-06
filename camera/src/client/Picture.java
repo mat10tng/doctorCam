@@ -38,8 +38,8 @@ public class Picture implements Comparable<Object> {
 			}
 		}
 		timeStamp = byteToLong(byteTimestamp);
-		System.out.println("timestamp= "+new Date(timeStamp)+" for id="+id);
-		System.out.println("currentTime= "+new Date(System.currentTimeMillis()));
+		//System.out.println("timestamp= "+new Date(timeStamp)+" for id="+id);
+		//System.out.println("currentTime= "+new Date(System.currentTimeMillis()));
 		picture = new ImageIcon(bytePicture);
 	}
 
@@ -85,9 +85,9 @@ public class Picture implements Comparable<Object> {
 
 	public void setWaitTime(long latestTime) {
 		long newWaitTime = timeStamp - latestTime;
-		if(newWaitTime<0){
-			System.out.println("Negative WaitTime for picture from Camera with ID="+id);
-		}
+//		if(newWaitTime<0){
+//			System.out.println("Negative WaitTime for picture from Camera with ID="+id);
+//		}
 		this.waitTime = newWaitTime > 0 ? newWaitTime : 0;
 	}
 

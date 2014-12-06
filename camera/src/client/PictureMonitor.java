@@ -33,7 +33,7 @@ public class PictureMonitor {
 	 *            : the mode which should be enabled
 	 */
 	public synchronized void setMode(int mode) {
-		System.out.println("set mode: " + mode);
+		//System.out.println("set mode: " + mode);
 		if (!forcedMode) {
 			this.viewMode = mode;
 		}
@@ -101,7 +101,7 @@ public class PictureMonitor {
 	 * @throws InterruptedException
 	 */
 	public synchronized Picture getPicture(int id) throws InterruptedException {
-		while (pictures.containsKey(id) && pictures.get(id).isEmpty()) {
+		while (!pictures.containsKey(id) || pictures.get(id).isEmpty()) {
 			wait();
 		}
 		Picture picture = pictures.get(id).pop();
@@ -126,7 +126,7 @@ public class PictureMonitor {
 			}
 			picture.currentViewMode = viewMode;
 			pictures.get(picture.getId()).add(picture);
-			System.out.println("PMonitorSize: "+pictures.get(picture.getId()).size()+" for ID="+picture.getId());
+			//System.out.println("PMonitorSize: "+pictures.get(picture.getId()).size()+" for ID="+picture.getId());
 			notifyAll();
 		}
 	}

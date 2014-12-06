@@ -48,7 +48,7 @@ public class ClientReceiver extends Thread {
 				// TODO CONSTANTS ADDED FROM SERVERSIDE
 				switch (packageType[0]) {
 				case ((byte)0 /* Picture Package */):
-					System.out.println("Got picpackage");
+					//System.out.println("Got picpackage");
 					int length = 0;
 					byte[] lengthInBytes = new byte[4];
 					input.read(lengthInBytes);
