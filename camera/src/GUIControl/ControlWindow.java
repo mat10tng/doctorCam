@@ -27,7 +27,7 @@ public class ControlWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		setSize(300, 350);
-		setResizable(false);
+		setResizable(true);
 	}
 
 	public void windowClosing(WindowEvent e) {
