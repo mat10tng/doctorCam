@@ -34,27 +34,12 @@ public class ClientMonitor {
 	public synchronized void addConnectionData(ConnectionData data) {
 		if (data != null
 				&& data.getAction() == Constants.ConnectionActions.OPEN_CONNECTION) {
+			
 			sendData.put(data.getID(), new LinkedList<Byte[]>());
-			addModeDataToConnection(data.getID(), cameraMode);
+			Byte[] modeData = Constants.CameraMode.getModeBytes(cameraMode);
+			addModeDataToConnection(data.getID(), modeData);
 		}
 		queue.add(data);
-		notifyAll();
-	}
-
-	/**
-	 * Called by ClientReceiver when a new picture package has arrived Adds the
-	 * new picture to a queue of pictures, sorts the queue and then tells the
-	 * system new picture is added.
-	 */
-	public synchronized void addPicture(Picture picture) {
-		if (cameraMode == Constants.CameraMode.AUTO_MODE) {
-			picture.currentCameraMode = motiondetected ? Constants.CameraMode.MOVIE_MODE
-					: Constants.CameraMode.IDLE_MODE;
-		} else {
-			picture.currentCameraMode = cameraMode;
-		}
-		pictures.add(picture);
-		Collections.sort(pictures);
 		notifyAll();
 	}
 
@@ -69,8 +54,83 @@ public class ClientMonitor {
 			wait();
 		}
 		return queue.pop();
+	}	
+	
+	/**
+	 * Removes a connection
+	 * @param ID: the connection which should be removed
+	 */
+	public synchronized void removeConnection(int ID) {
+		sendData.remove(ID);
+	}
+	
+	/**
+	 * Close all connections, wait until every connection is closed (or
+	 * destroyed)
+	 * 
+	 * @throws InterruptedException
+	 */
+	public synchronized void closeAllSockets() throws InterruptedException {
+		addConnectionData(null);
+		while (!destroyed) {
+			wait();
+		}
+
+	}
+	
+	/**
+	 * Adds packages to all connections currently running.
+	 * @param mode: which mode to run.
+	 */
+	private void addModeDataToAllConnections(int mode) {
+		Byte[] modeData = Constants.CameraMode.getModeBytes(mode);
+		for (int ID: sendData.keySet()) {
+			addModeDataToConnection(ID, modeData);
+		}
+		
 	}
 
+	/**
+	 * Add data to be sent to a single connection.
+	 * @param ID: The id of the connection
+	 * @param mode: The mode to be switched to
+	 */
+	private void addModeDataToConnection(int ID, Byte[] data) {
+		sendData.get(ID).add(data);
+	}
+	
+	
+	
+	/**
+	 * Called by ClientReceiver when a new picture package has arrived Adds the
+	 * new picture to a queue of pictures, sorts the queue and then tells the
+	 * system new picture is added.
+	 */
+	public synchronized void addPicture(Picture picture) {
+		if (cameraMode == Constants.CameraMode.AUTO_MODE) {
+			picture.currentCameraMode = motiondetected ? Constants.CameraMode.MOVIE_MODE
+					: Constants.CameraMode.IDLE_MODE;
+		} else {
+			picture.currentCameraMode = cameraMode;
+		}
+		
+		pictures.add(picture);
+		Collections.sort(pictures);
+		notifyAll();
+	}
+
+	/**
+	 * Fetches the most recent picture in the queue
+	 * @return First element of the queue of pictures
+	 * @throws InterruptedException
+	 */
+	public synchronized Picture getPicture() throws InterruptedException {
+		while (pictures.isEmpty()) {
+			wait();
+		}
+		return pictures.pop();
+	}
+	
 	/**
 	 * Called by ClientReceiver when new motion detected package has arrived.
 	 * Tells the system that motion has been detected.
@@ -81,40 +141,6 @@ public class ClientMonitor {
 			motiondetected = true;
 			notifyAll();
 		}
-	}
-
-	/**
-	 * Adds packages to all connections currently running.
-	 * @param mode: which mode to run.
-	 */
-	private void addModeDataToAllConnections(int mode) {
-		Byte[] modeData = new Byte[2];
-		switch (mode) {
-		case (Constants.CameraMode.IDLE_MODE):
-			modeData = Constants.CameraMode.getIdleBytes();
-			break;
-		case (Constants.CameraMode.MOVIE_MODE):
-			modeData = Constants.CameraMode.getMovieBytes();
-			break;
-		case (Constants.CameraMode.AUTO_MODE):
-			modeData = Constants.CameraMode.getAutoBytes();
-			break;
-		default:
-			System.exit(1);
-		}
-		for (LinkedList<Byte[]> queue : sendData.values()) {
-			queue.add(modeData);
-		}
-	}
-
-	/**
-	 * Add data to be sent to a single connection.
-	 * @param ID: The id of the connection
-	 * @param mode: The mode to be switched to
-	 */
-	private void addModeDataToConnection(int ID, int mode) {
-		Byte[] data = Constants.CameraMode.getModeBytes(mode);
-		sendData.get(ID).add(data);
 	}
 
 	/**
@@ -141,50 +167,17 @@ public class ClientMonitor {
 	public synchronized void setCameraMode(int mode) {
 		if (mode != Constants.CameraMode.AUTO_MODE && mode == cameraMode) {
 			forcedMode = true;
-			addModeDataToAllConnections(mode);
 		} else {
 			forcedMode = false;
 			motiondetected = false;
-			addModeDataToAllConnections(mode);
 		}
+		
+		addModeDataToAllConnections(mode);
 		cameraMode = mode;
 		notifyAll();
 	}
 
-	/**
-	 * Removes a connection
-	 * @param ID: the connection which should be removed
-	 */
-	public synchronized void removeConnection(int ID) {
-		sendData.remove(ID);
-	}
-
-	/**
-	 * Fetches the most recent picture in the queue
-	 * @return First element of the queue of pictures
-	 * @throws InterruptedException
-	 */
-	public synchronized Picture getPicture() throws InterruptedException {
-		while (pictures.isEmpty()) {
-			wait();
-		}
-		return pictures.pop();
-	}
-
-	/**
-	 * Close all connections, wait until every connection is closed (or
-	 * destroyed)
-	 * 
-	 * @throws InterruptedException
-	 */
-	public synchronized void closeAllSockets() throws InterruptedException {
-		addConnectionData(null);
-		while (!destroyed) {
-			wait();
-		}
-
-	}
-
+	
 	/**
 	 * Set destory variable to true, to indicate it is okay to kill the system
 	 */

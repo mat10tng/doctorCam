@@ -56,28 +56,10 @@ public class ProcessHandler extends Thread {
 					try {
 					switch (cdata.getAction()) {
 					case (Constants.ConnectionActions.OPEN_CONNECTION):
-						views.put(id, new ViewHandler(picMonitor,
-								new ViewWindow("Camera: " + id), id));
-						views.get(id).start();
-						clientSockets.put(id,
-								new Socket(cdata.getIP(), cdata.getPort()));
-						ClientReceiver receiver = new ClientReceiver(
-								clientMonitor, clientSockets.get(id)
-										.getInputStream(), id);
-						senders.put(id, new ClientSender(clientMonitor,
-								clientSockets.get(id).getOutputStream(), id));
-						picMonitor.registerPictureSource(id);
-						senders.get(id).start();
-						receiver.start();
+						openConnection(id);
 						break;
 					case (Constants.ConnectionActions.CLOSE_CONNECTION):
-						clientSockets.get(id).close();
-						senders.get(id).interrupt();
-						views.get(id).interrupt();
-						clientMonitor.removeConnection(id);
-						picMonitor.removePictureSource(id);
-						senders.remove(id);
-						views.remove(id);
+						closeConnection(id);
 						break;
 					default:
 						System.out.println("You should not be here!");
@@ -117,5 +99,31 @@ public class ProcessHandler extends Thread {
 		}
 		clientMonitor.destroyed();
 
+	}
+	
+	private  void openConnection(int id) throws UnknownHostException, IOException{
+		views.put(id, new ViewHandler(picMonitor,
+				new ViewWindow("Camera: " + id), id));
+		views.get(id).start();
+		clientSockets.put(id,
+				new Socket(cdata.getIP(), cdata.getPort()));
+		ClientReceiver receiver = new ClientReceiver(
+				clientMonitor, clientSockets.get(id)
+						.getInputStream(), id);
+		senders.put(id, new ClientSender(clientMonitor,
+				clientSockets.get(id).getOutputStream(), id));
+		picMonitor.registerPictureSource(id);
+		senders.get(id).start();
+		receiver.start();
+	}
+	
+	private void closeConnection(int id) throws IOException{
+		clientSockets.get(id).close();
+		senders.get(id).interrupt();
+		views.get(id).interrupt();
+		clientMonitor.removeConnection(id);
+		picMonitor.removePictureSource(id);
+		senders.remove(id);
+		views.remove(id);
 	}
 }
