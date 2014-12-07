@@ -24,15 +24,17 @@ public class AddCameraButton extends JButton implements ActionListener {
 	public AddCameraButton(HashMap<Integer, IpInformation> ipinformations,
 			ClientMonitor clientMonitor) {
 		super("Add Cam");
+		
 		this.ipinformation = ipinformations;
 		this.clientMonitor = clientMonitor;
+		
+		cam = new ImageIcon("camera.png");
+		setIcon(cam);
 		
 		setVerticalTextPosition(SwingConstants.BOTTOM);
 		setHorizontalTextPosition(SwingConstants.CENTER);
 		addActionListener(this);
 		
-		cam = new ImageIcon("camera.png");
-		setIcon(cam);
 	}
 
 	@Override

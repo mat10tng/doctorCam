@@ -16,12 +16,13 @@ public class ControlWindow extends JFrame {
 	private static final long serialVersionUID = -5227371010759534852L;
 	private ClientMonitor clientMonitor;
 
-	public ControlWindow(ClientMonitor clientMonitor,
-			PictureMonitor pictureMonitor) {
+	public ControlWindow(ClientMonitor clientMonitor,PictureMonitor pictureMonitor) {
 		super("Control");
 		this.clientMonitor = clientMonitor;
+		
 		ImageIcon img = new ImageIcon("control.png");
 		setIconImage(img.getImage());
+		
 		this.add(new ControlPanel(clientMonitor, pictureMonitor));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);

@@ -15,7 +15,6 @@ import client.Constants;
 import client.IpInformation;
 
 public class RemoveCameraButton extends JButton implements ActionListener {
-
 	private static final long serialVersionUID = 7968778894256285503L;
 	private ClientMonitor clientMonitor;
 	private HashMap<Integer, IpInformation> ipinformation;
@@ -24,13 +23,17 @@ public class RemoveCameraButton extends JButton implements ActionListener {
 	public RemoveCameraButton(HashMap<Integer, IpInformation> ipinformations,
 			ClientMonitor clientMonitor) {
 		super("Remove Cam");
+		
 		this.ipinformation = ipinformations;
 		this.clientMonitor = clientMonitor;
+		
+		killcam = new ImageIcon("killcamera.png");
+		setIcon(killcam);
+		
 		setVerticalTextPosition(SwingConstants.BOTTOM);
 		setHorizontalTextPosition(SwingConstants.CENTER);
 		addActionListener(this);
-		killcam = new ImageIcon("killcamera.png");
-		setIcon(killcam);
+		
 	}
 
 	@Override
