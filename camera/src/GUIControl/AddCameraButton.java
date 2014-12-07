@@ -26,9 +26,11 @@ public class AddCameraButton extends JButton implements ActionListener {
 		super("Add Cam");
 		this.ipinformation = ipinformations;
 		this.clientMonitor = clientMonitor;
+		
 		setVerticalTextPosition(SwingConstants.BOTTOM);
 		setHorizontalTextPosition(SwingConstants.CENTER);
 		addActionListener(this);
+		
 		cam = new ImageIcon("camera.png");
 		setIcon(cam);
 	}
@@ -47,29 +49,29 @@ public class AddCameraButton extends JButton implements ActionListener {
 		}
 		if (found) {
 			String ip = JOptionPane.showInputDialog("Enter ip address: ");
-			String portString = JOptionPane.showInputDialog("Enter port: ");
-			if (portString != null && ip != null) {
-				int port = Integer.parseInt(portString);
-				IpInformation newInfo = new IpInformation(ip, port, id);
-				if (isUniqueInfo(newInfo)) {
-					ipinformation.put(id, new IpInformation(ip, port, id));
-					clientMonitor.addConnectionData(new ConnectionData(ip,
-							port, id,
-							Constants.ConnectionActions.OPEN_CONNECTION));
-				} else {
-					JOptionPane.showMessageDialog(null,
-							"Connection with info: "+newInfo+" already established");
-				}
+			if (ip != null) {
+				String portString = JOptionPane.showInputDialog("Enter port: ");
+				updateInformation(ip, portString, id);
 			}
-
 		} else {
-			JOptionPane.showMessageDialog(null,
-					"Cannot connect to more cameras");
+			JOptionPane.showMessageDialog(null, "Cannot connect to more cameras");
 		}
 
 	}
 
-	private boolean isUniqueInfo(IpInformation newInfo) {
-		return !ipinformation.values().contains(newInfo);
+	private void updateInformation(String ip, String portString, int id) {
+		if (portString != null){
+			int port = Integer.parseInt(portString);
+			IpInformation newInfo = new IpInformation(ip, port, id);
+			
+			if (!ipinformation.values().contains(newInfo)) {
+				ipinformation.put(id, new IpInformation(ip, port, id));
+				clientMonitor.addConnectionData(new ConnectionData(ip, port, id,
+						Constants.ConnectionActions.OPEN_CONNECTION));
+			} else {
+				JOptionPane.showMessageDialog(null, "Connection with info: "
+						+ newInfo + " already established");
+			}
+		}
 	}
 }
