@@ -29,6 +29,9 @@ public class ServerMonitor {
 
 	
 	//private boolean streamHTTP;
+	/**
+	 * Creates a servermonitor, which handles all communication between hardware and the network.
+	 */
 	public ServerMonitor() {
 		
 		currentMode = AUTO_MODE;
@@ -51,8 +54,6 @@ public class ServerMonitor {
 	
 	public synchronized void updatePictureData(byte[] jpeg, byte[] currentTime,
 			int dataLength){
-		// TODO Auto-generated method stub
-		//updateJpeg(jpeg,dataLength);
 		lastPictureData = new byte[ID_SIZE + LEN_SIZE + TS_SIZE
 				+ dataLength];
 		int offset = setData(lastPictureData, PICTURE_DATA_ID,ID_SIZE, 0);
@@ -90,12 +91,10 @@ public class ServerMonitor {
 		while (!streamAlive) {
 			wait();
 		}
-		//System.out.println("i should not be here inputstream after connection end");
 		return socket.getInputStream();
 	}
 	
 	public synchronized void receivedTerminateConnection() {
-		//System.out.println("Connection has been terminate");
 		endConnection = true;
 		streamAlive = false;
 		notifyAll();
@@ -127,24 +126,8 @@ public class ServerMonitor {
 	
 	// others share
 	public synchronized void setMode(int read) {
-//		switch (read) {
-//		case AUTO_MODE:
-//			currentMode = AUTO_MODE;
-//			System.out.println("Autobot roll out");
-//			break;
-//			
-//		case IDLE_MODE:
-//			currentMode = IDLE_MODE;
-//			System.out.println("This is idle mode");
-//			break;
-//		case MOVIE_MODE:
-//			currentMode = MOVIE_MODE;
-//			System.out.println("We got movie night");
-//			break;
-//		}
 		currentMode=read;
 		notifyNewPicture();
-		//notifyAll();
 	}
 
 	private int setData(byte[] lastPictureData, byte[] data,int length, int offset) {

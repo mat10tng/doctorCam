@@ -36,9 +36,7 @@ public class ServerHandler extends Thread{
 					serverMonitor.endConnection();
 					socket.close();
 				} catch (IOException e) {
-					//e.printStackTrace();
 				} catch (InterruptedException e) {
-					//e.printStackTrace();
 				}
 		}	
 	}

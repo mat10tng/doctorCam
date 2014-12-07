@@ -1,7 +1,5 @@
 package client;
 
-import java.util.Date;
-
 import javax.swing.ImageIcon;
 
 /**

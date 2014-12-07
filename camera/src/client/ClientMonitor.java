@@ -28,7 +28,7 @@ public class ClientMonitor {
 	}
 
 	/**
-	 * Called by CrtlListener when a new camera is to be connected or a
+	 * Called by ControlWindow when a new camera is to be connected or a
 	 * connection is to be closed
 	 * */
 	public synchronized void addConnectionData(ConnectionData data) {
@@ -43,7 +43,8 @@ public class ClientMonitor {
 
 	/**
 	 * Called by ClientReceiver when a new picture package has arrived Adds the
-	 * new picture to a queue of pictures
+	 * new picture to a queue of pictures, sorts the queue and then tells the
+	 * system new picture is added.
 	 */
 	public synchronized void addPicture(Picture picture) {
 		if (cameraMode == Constants.CameraMode.AUTO_MODE) {
@@ -72,8 +73,7 @@ public class ClientMonitor {
 
 	/**
 	 * Called by ClientReceiver when new motion detected package has arrived.
-	 * Tells the system that motion has been detected. TODO Switch to movie
-	 * mode/ handle forced modes.
+	 * Tells the system that motion has been detected.
 	 */
 	public synchronized void motionDetected() {
 		if (cameraMode != Constants.CameraMode.MOVIE_MODE && !forcedMode) {
@@ -83,6 +83,10 @@ public class ClientMonitor {
 		}
 	}
 
+	/**
+	 * Adds packages to all connections currently running.
+	 * @param mode: which mode to run.
+	 */
 	private void addModeDataToAllConnections(int mode) {
 		Byte[] modeData = new Byte[2];
 		switch (mode) {
@@ -96,7 +100,6 @@ public class ClientMonitor {
 			modeData = Constants.CameraMode.getAutoBytes();
 			break;
 		default:
-			//System.out.println("wrong in addSendData: " + this.toString());
 			System.exit(1);
 		}
 		for (LinkedList<Byte[]> queue : sendData.values()) {
@@ -104,6 +107,11 @@ public class ClientMonitor {
 		}
 	}
 
+	/**
+	 * Add data to be sent to a single connection.
+	 * @param ID: The id of the connection
+	 * @param mode: The mode to be switched to
+	 */
 	private void addModeDataToConnection(int ID, int mode) {
 		Byte[] data = Constants.CameraMode.getModeBytes(mode);
 		sendData.get(ID).add(data);
@@ -112,8 +120,9 @@ public class ClientMonitor {
 	/**
 	 * Called by ClientSender thread to get next package to send. Blocking until
 	 * ready to send package
-	 * 
-	 * @return ClientSendData - Data to be sent to server
+	 * @param id: The id of the connection 
+	 * @return senData for the selected connection
+	 * @throws InterruptedException
 	 */
 	public synchronized Byte[] getOutgoingData(int id)
 			throws InterruptedException {
@@ -142,10 +151,19 @@ public class ClientMonitor {
 		notifyAll();
 	}
 
+	/**
+	 * Removes a connection
+	 * @param ID: the connection which should be removed
+	 */
 	public synchronized void removeConnection(int ID) {
 		sendData.remove(ID);
 	}
 
+	/**
+	 * Fetches the most recent picture in the queue
+	 * @return First element of the queue of pictures
+	 * @throws InterruptedException
+	 */
 	public synchronized Picture getPicture() throws InterruptedException {
 		while (pictures.isEmpty()) {
 			wait();

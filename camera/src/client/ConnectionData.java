@@ -1,6 +1,5 @@
 package client;
 
-
 public class ConnectionData {
 	private String IP;
 	private int port;
@@ -8,6 +7,9 @@ public class ConnectionData {
 	private int action;
 
 	/**
+	 * Creates a connection data class, which contains all the connection data
+	 * needed to establish a connection.
+	 * 
 	 * @param IP
 	 *            : the IP address
 	 * @param port
@@ -15,7 +17,7 @@ public class ConnectionData {
 	 * @param ID
 	 *            : an ID, usually [0,2, ..]
 	 * @param action
-	 *            : either A constant found in Constants.ConnectionActions
+	 *            : which action to made (close or open)
 	 */
 	public ConnectionData(String IP, int port, int ID, int action) {
 		this.IP = IP;
@@ -24,6 +26,15 @@ public class ConnectionData {
 		this.action = action;
 	}
 
+	/**
+	 * Creates a connection data class, which contains all the connection data
+	 * needed to establish a connection.
+	 * 
+	 * @param ipinformation
+	 *            - the information needed to make a connection
+	 * @param action
+	 *            - which action to made (close or open)
+	 */
 	public ConnectionData(IpInformation ipinformation, int action) {
 		this.IP = ipinformation.getHost();
 		this.port = ipinformation.getPort();

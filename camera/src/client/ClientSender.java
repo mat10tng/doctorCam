@@ -39,12 +39,9 @@ public class ClientSender extends Thread {
 		try {
 			while (!isInterrupted()) {
 				Byte[] packagedData = clientMonitor.getOutgoingData(id);
-				//in order to write the data it needs to be in prmitive byte form, not Byte objects
-				byte[] primitiveBytePackage=new byte[packagedData.length];
-				for(int i=0;i<packagedData.length;i++){
-					primitiveBytePackage[i]=packagedData[i].byteValue();
-				}
-				//System.out.println("Sending package "+ primitiveBytePackage[0] + " " + primitiveBytePackage[1]);
+				// in order to write the data it needs to be in prmitive byte
+				// form, not Byte objects
+				byte[] primitiveBytePackage = toPrimativeByteArray(packagedData);
 				output.write(primitiveBytePackage);
 				output.flush();
 			}
@@ -53,5 +50,20 @@ public class ClientSender extends Thread {
 		} catch (IOException e) {
 
 		}
+	}
+
+	/**
+	 * Turns a Byte[] to the primitive týpe.
+	 * 
+	 * @param bytePackage
+	 *            : the Byte array to be changed.
+	 * @return the primitive byte array
+	 */
+	private byte[] toPrimativeByteArray(Byte[] bytePackage) {
+		byte[] primitiveBytePackage = new byte[bytePackage.length];
+		for (int i = 0; i < bytePackage.length; i++) {
+			primitiveBytePackage[i] = bytePackage[i].byteValue();
+		}
+		return primitiveBytePackage;
 	}
 }

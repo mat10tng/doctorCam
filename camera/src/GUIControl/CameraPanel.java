@@ -6,7 +6,6 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 
 import client.ClientMonitor;
-import client.Constants;
 import client.IpInformation;
 
 public class CameraPanel extends JPanel {

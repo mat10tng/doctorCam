@@ -1,6 +1,5 @@
 package client;
 
-
 /**
  * @author Shan
  *
@@ -40,9 +39,8 @@ public class PictureHandler extends Thread {
 			while (!isInterrupted()) {
 				Picture picture = clientMonitor.getPicture();
 				id = pictureMonitor.checkVaildId(id);
-				//System.out.println(picture.getLatencyInMS());
-				if(id >=0 && picture.getId() != id){
-					if ((picture.getTimeStamp()-latestTime)  > synchronizationThreashold) {
+				if (id >= 0 && picture.getId() != id) {
+					if ((picture.getTimeStamp() - latestTime) > synchronizationThreashold) {
 						pictureMonitor.setMode(Constants.ViewMode.ASYNC_MODE);
 					}
 				}
@@ -51,7 +49,6 @@ public class PictureHandler extends Thread {
 				pictureMonitor.addPicture(picture);
 			}
 		} catch (InterruptedException e) {
-			// do something
 		}
 	}
 

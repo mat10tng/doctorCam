@@ -54,7 +54,6 @@ public class CamListener extends Thread {
 			switch(serverMonitor.getCurrentMode()){
 				case ServerMonitor.MOVIE_MODE:
 					oldTime = updatePictureData(jpeg,currentTime,length);
-					//serverMonitor.notifyNewPicture();
 					break;
 				default:
 					timeDifference = byteToLong(currentTime) - oldTime;
@@ -98,6 +97,13 @@ public class CamListener extends Thread {
 		return i; 
 
 	}
+	/**
+	 * Updates the picture data in the monitor
+	 * @param jpeg: the jpeg
+	 * @param currentTime: the time of when the jpeg was taken
+	 * @param length: the length of the jpeg
+	 * @return the currentTime in long
+	 */
 	private long updatePictureData(byte[] jpeg, byte[] currentTime, int length){
 		serverMonitor.updatePictureData(jpeg,currentTime,length);
 		return  byteToLong(currentTime);

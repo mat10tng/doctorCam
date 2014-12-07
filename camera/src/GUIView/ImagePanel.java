@@ -1,12 +1,14 @@
 package GUIView;
 
-import java.awt.Image;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ImagePanel extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3974631698609579489L;
 	private JLabel videoFeed;
 	public ImagePanel(ImageIcon picture) {
 		super();

@@ -9,8 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
-import org.omg.CORBA.Environment;
-
 import client.ClientMonitor;
 import client.ConnectionData;
 import client.Constants;

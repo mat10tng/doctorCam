@@ -36,9 +36,7 @@ public class ViewHandler extends Thread {
 	public void run() {
 		try {
 			while (!isInterrupted()) {
-				System.out.println("hello");
 				Picture p=pictureMonitor.getPicture(id);
-				System.out.println("after monitor");
 				if (p.getWaitTime()>0){
 					System.out.println("sleeping: "+p.getWaitTime()+" id="+p.getId());
 					Thread.sleep(p.getWaitTime());

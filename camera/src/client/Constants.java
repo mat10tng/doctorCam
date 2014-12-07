@@ -60,12 +60,8 @@ public class Constants {
 		public static final int OPEN_CONNECTION = 1;
 	}
 
-	public class DebugIps {
-		public static final String IP1 = "localhost";
-		public static final int PORT1 = 2001;
-		public static final int ID1 = 1;
-		public static final String IP2 = "localhost";
-		public static final int PORT2 = 2002;
-		public static final int ID2 = 2;
+	public class PackageData{
+		public static final byte PICTURE_PACKAGE = 0;
+		public static final byte MOTION_PACKAGE = 1;
 	}
 }

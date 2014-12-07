@@ -33,7 +33,6 @@ public class PictureMonitor {
 	 *            : the mode which should be enabled
 	 */
 	public synchronized void setMode(int mode) {
-		//System.out.println("set mode: " + mode);
 		if (!forcedMode) {
 			this.viewMode = mode;
 		}
@@ -86,15 +85,17 @@ public class PictureMonitor {
 	 * @param id
 	 *            The connection ID
 	 */
-	public synchronized void removePictureSource(int id) {	
+	public synchronized void removePictureSource(int id) {
 		pictures.remove(id);
-		//reset latest if it is not needed
-		if(pictures.size()<2){
-			latestTime=0;
+		// reset latest if it is not needed
+		if (pictures.size() < 2) {
+			latestTime = 0;
 		}
 	}
 
 	/**
+	 * Gets the latest picture for the given id
+	 * 
 	 * @param id
 	 *            : The connection ID
 	 * @return a Picture object, containing displayinfo and more..
@@ -126,7 +127,6 @@ public class PictureMonitor {
 			}
 			picture.currentViewMode = viewMode;
 			pictures.get(picture.getId()).add(picture);
-			//System.out.println("PMonitorSize: "+pictures.get(picture.getId()).size()+" for ID="+picture.getId());
 			notifyAll();
 		}
 	}

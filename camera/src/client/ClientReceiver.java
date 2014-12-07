@@ -45,10 +45,8 @@ public class ClientReceiver extends Thread {
 				byte[] packageType = new byte[1];
 				input.read(packageType);
 				// proccess package to information.
-				// TODO CONSTANTS ADDED FROM SERVERSIDE
 				switch (packageType[0]) {
-				case ((byte)0 /* Picture Package */):
-					//System.out.println("Got picpackage");
+				case (Constants.PackageData.PICTURE_PACKAGE):
 					int length = 0;
 					byte[] lengthInBytes = new byte[4];
 					input.read(lengthInBytes);
@@ -61,7 +59,7 @@ public class ClientReceiver extends Thread {
 					}
 					monitor.addPicture(new Picture(dataPackage, id));
 					break;
-				case ((byte)1 /* Motion package */):
+				case (Constants.PackageData.MOTION_PACKAGE):
 					monitor.motionDetected();
 					break;
 				default:
@@ -74,6 +72,11 @@ public class ClientReceiver extends Thread {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Changes byte array to integer
+	 * @param bytes the array which should be converted
+	 * @return int - which represents the bytearray
+	 */
 	private int byteToInt(byte[] bytes){
 		int i= (bytes[0]<<24)&0xff000000|
 			       (bytes[1]<<16)&0x00ff0000|
